@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage, faUnderline , faXmark} from "@fortawesome/free-solid-svg-icons";
+import {
+	faImage,
+	faUnderline,
+	faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 
 import "../App.css";
 import InputList from "../components/InputList";
@@ -77,6 +81,40 @@ function CreateForm() {
 		image: null, // to store the selected image file
 	});
 
+	const uploadImage = (image, type) => {
+		const data = new FormData();
+		data.append("image", image);
+
+		fetch(`${host}/image/upload`, {
+			method: "POST",
+			body: data,
+		})
+			.then((res) => res.json())
+			.then((res) => {
+				if (res.isError) {
+				} else {
+					if (type === "form") {
+						setFormImageHaves(true);
+						setHeaderImage(res.imageResult.url);
+					} else if (type === "q1") {
+						setQ1ImageHave(true);
+						setQ1Image(res.imageResult.url);
+					} else if (type === "q2") {
+						setQ2ImageHave(true);
+						setQ2Image(res.imageResult.url);
+					} else if (type === "q3") {
+						setQ3ImageHave(true);
+						setQ3Image(res.imageResult.url);
+					}
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+				setIsProgress(false);
+				alert(err.message);
+			});
+	};
+
 	const handleImageChange = (e) => {
 		const imageFile = e.target.files[0];
 		setFormData({ ...formData, image: imageFile });
@@ -86,6 +124,7 @@ function CreateForm() {
 		reader.onload = (e) => {
 			setFormImageHaves(true);
 			setHeaderImage(e.target.result);
+			uploadImage(imageFile, "form");
 		};
 		reader.readAsDataURL(imageFile);
 	};
@@ -99,6 +138,7 @@ function CreateForm() {
 		reader.onload = (e) => {
 			setQ1ImageHave(true);
 			setQ1Image(e.target.result);
+			uploadImage(imageFile, "q1");
 		};
 		reader.readAsDataURL(imageFile);
 	};
@@ -112,6 +152,7 @@ function CreateForm() {
 		reader.onload = (e) => {
 			setQ2ImageHave(true);
 			setQ2Image(e.target.result);
+			uploadImage(imageFile, "q2");
 		};
 		reader.readAsDataURL(imageFile);
 	};
@@ -125,6 +166,7 @@ function CreateForm() {
 		reader.onload = (e) => {
 			setQ3ImageHave(true);
 			setQ3Image(e.target.result);
+			uploadImage(imageFile, "q3");
 		};
 		reader.readAsDataURL(imageFile);
 	};
@@ -335,6 +377,7 @@ function CreateForm() {
 			description: q1Desc,
 			categories: q1Categories,
 			options: q1Options,
+			q1Image,
 			markOnCorrectAnswer: q1Marks,
 		};
 
@@ -369,6 +412,7 @@ function CreateForm() {
 		let q2 = {
 			description: q2Desc,
 			preview: q2Sentence,
+			q2Image,
 			correctAnswer: q2Sentence,
 			markOnCorrectAnswer: q2Marks,
 			options: selectedWords,
@@ -404,6 +448,7 @@ function CreateForm() {
 		let q3 = {
 			description: q3Desc,
 			paragraph: paragraph,
+			q3Image,
 			mcq: mcq,
 			markOnCorrectAnswer: q3Marks,
 		};
@@ -439,6 +484,7 @@ function CreateForm() {
 			name: formName,
 			description: formDesc,
 			adminId: userId,
+			headerImage,
 			q1,
 			q2,
 			q3,
@@ -462,9 +508,9 @@ function CreateForm() {
 					// alert("Form created successfully");
 					setProgress(100);
 					setProgressText("Form created successfully...");
-					
-					let u = window.location.href.split("form")[0]
-					setUrl(`${u}form/${res.form._id}`)
+
+					let u = window.location.href.split("form")[0];
+					setUrl(`${u}form/${res.form._id}`);
 				}
 			})
 			.catch((err) => {
@@ -893,7 +939,6 @@ function CreateForm() {
 										id=""
 										cols="30"
 										rows="5"
-										setParagraph
 										value={paragraph}
 										onChange={(e) => setParagraph(e.target.value)}
 										placeholder="Enter paragraph (required)"
@@ -968,18 +1013,23 @@ function CreateForm() {
 							{progress}{" "}
 						</progress>
 						<p>{progressText}</p>
-						{url && <p id="link">
-							{url}
-							<button
-								className="border-2 bg-transparent outline-none custom-placeholder px-1 border-b-2 border-sky-200"
-								onClick={handelCopyLink}
-							>
-								Copy Link
-							</button>
-						</p>}
+						{url && (
+							<p id="link">
+								{url}
+								<button
+									className="border-2 bg-transparent outline-none custom-placeholder px-1 border-b-2 border-sky-200"
+									onClick={handelCopyLink}
+								>
+									Copy Link
+								</button>
+							</p>
+						)}
 					</div>
-					<FontAwesomeIcon icon={faXmark} onClick={()=> setIsProgress(false)} 
-										className="mr-8 text-3xl cursor-pointer -mt-16 ml-40"/>
+					<FontAwesomeIcon
+						icon={faXmark}
+						onClick={() => setIsProgress(false)}
+						className="mr-8 text-3xl cursor-pointer -mt-16 ml-40"
+					/>
 				</div>
 			)}
 		</div>

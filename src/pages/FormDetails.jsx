@@ -7,6 +7,13 @@ import Q1Component from "../components/Q1Component";
 import Q2Component from "../components/Q2Component";
 import Q3Component from "../components/Q3Component";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faImage,
+	faUnderline,
+	faXmark,
+} from "@fortawesome/free-solid-svg-icons";
+
 const navigation = [
 	{ name: "Product", to: "#" },
 	{ name: "Features", to: "#" },
@@ -21,7 +28,7 @@ function FormDetails() {
 
 	const [formName, setFormName] = useState("");
 	const [formDesc, setFormDesc] = useState("");
-	const [displayForm, setDisplayForm] = useState(false)
+	const [displayForm, setDisplayForm] = useState(false);
 	const [formImageHaves, setFormImageHaves] = useState(false);
 	const [headerImage, setHeaderImage] = useState("/images/heading_image.jpg");
 
@@ -56,6 +63,10 @@ function FormDetails() {
 	const [displayQ3, setDisplayQ3] = useState(false);
 	const [mcqComponents, setMcqComponents] = useState([]);
 
+	const [progress, setProgress] = useState(50);
+	const [isProgress, setIsProgress] = useState(false);
+	const [progressText, setProgressText] = useState("progressing...");
+
 	useEffect(() => {
 		fetch(`${host}/form/get/${id}`)
 			.then((res) => res.json())
@@ -82,29 +93,50 @@ function FormDetails() {
 
 		setFormName(res.form.name);
 		setFormDesc(res.form.description);
+		setHeaderImage(res.form.headerImage)
 
 		setQ1Categories(q1.categories);
 		setQ1Options(q1.options);
 		setQ1Marks(q1.markOnCorrectAnswer);
+		setQ1Image(q1.q1Image);
 
 		setQ2Sentence(q2.correctAnswer);
-		let arr =  q2.options.map((ele) =>{
-			return ele.selectedWord
-		})
+		let arr = q2.options.map((ele) => {
+			return ele.selectedWord;
+		});
 		setQ2Options(arr);
 		setQ2Marks(q2.markOnCorrectAnswer);
+		setQ2Image(q2.q2Image);
 
 		setParagraph(q3.paragraph);
 		setMcq(q3.mcq);
 		setQ3Marks(q3.markOnCorrectAnswer);
+		setQ3Image(q3.q3Image);
 
-		setTimeout(()=>{
-			console.log(q2.options)
+		setTimeout(() => {
+			console.log(q2.options);
 			setDisplayForm(true);
 			setDisplayQ1(true);
 			setDisplayQ2(true);
 			setDisplayQ3(true);
-		},1000)
+		}, 1000);
+	};
+
+	const handleFormSubmit = () => {
+		setIsProgress(true);
+		let currentProgress = 0;
+		setProgress(currentProgress);
+		setProgressText("Submitting...");
+		setInterval(() => {
+			currentProgress += 10;
+			setProgress(currentProgress);
+			if (progress === 100) {
+				return;
+			}
+		}, 100);
+		setTimeout(() => {
+			setProgressText("Form submitted successfully");
+		}, 1000);
 	};
 
 	return (
@@ -234,98 +266,125 @@ function FormDetails() {
 						/>
 					</div>
 
-					<main  className="mt-16">
-						{displayForm && <section className=" w-1/2  m-auto border">
-							
-							<div className="absolute">
-								<h1 className="mt-3.5 ml-3.5 mr-8 text-4xl">
-									{formName}
-								</h1>
-								<p className="mt-3.5 ml-3.5 mr-8 text-xl">{formDesc}</p>
-							</div>
-							<img
-								src={headerImage}
-								alt=""
-								id="image-preview"
-								className="w-full h-36 "
-							/>
-						</section>}
-						{displayQ1 && <section className=" w-1/2 m-auto mt-8 px-2 border">
-							<div className="flex justify-between items-center">
-								<h2 className="text-2xl">Question 1</h2>
-								<p>Marks {q1Marks}</p>
-							</div>
-							<div>
-								{q1ImageHave && (
-									<img
-										src={q1Image}
-										alt=""
-										id="image-preview"
-										className="w-full"
-									/>
-								)}
-								{q1Desc && (
-									<p className="mt-3.5 mr-8 text-l">{q1Desc}</p>
-								)}
-							</div>
-							<Q1Component
-								q1Categories={q1Categories}
-								q1Options={q1Options}
-							/>
-						</section>}
-						{displayQ2 && <section className=" w-1/2 m-auto  mt-8  px-2 border">
-							<div className="flex justify-between items-center">
-								<h2 className="text-2xl">Question 2</h2>
-								<p>Marks {q2Marks}</p>
-							</div>
-							<div>
-								{q2ImageHave && (
-									<img
-										src={q2Image}
-										alt=""
-										id="image-preview"
-										className="w-full"
-									/>
-								)}
-								{q2Desc && (
-									<p className="mt-3.5 mr-8 text-l">{q2Desc}</p>
-								)}
-							</div>
-							<Q2Component
-								sentence={q2Sentence}
-								wordsArray={q2Options}
-							/>
-						</section>}
-						{displayQ3 && <section className=" w-1/2 m-auto mt-8 px-2 border">
-							<div className="flex justify-between items-center">
-								<h2 className="text-2xl">Question 3</h2>
-								<p>Marks {q3Marks}</p>
-							</div>
-							<div>
-								{q3ImageHave && (
-									<img
-										src={q3Image}
-										alt=""
-										id="image-preview"
-										className="w-full"
-									/>
-								)}
-								{q3Desc && (
-									<p className="mt-3.5 mr-8 text-l">{q3Desc}</p>
-								)}
-							</div>
-							<Q3Component paragraph={paragraph} mcqArray={mcq} />
-						</section>}
-						<section id="formBottom" className=" w-1/2 m-auto  mt-8">
+					<main className="mt-16">
+						{displayForm && (
+							<section className=" w-1/2  m-auto border">
+								<div className="absolute">
+									<h1 className="mt-3.5 ml-3.5 mr-8 text-4xl">
+										{formName}
+									</h1>
+									<p className="mt-3.5 ml-3.5 mr-8 text-xl">
+										{formDesc}
+									</p>
+								</div>
+								<img
+									src={headerImage}
+									alt=""
+									id="image-preview"
+									className="w-full h-36 "
+								/>
+							</section>
+						)}
+						{displayQ1 && (
+							<section className=" w-1/2 m-auto mt-8 px-2 border">
+								<div className="flex justify-between items-center">
+									<h2 className="text-2xl">Question 1</h2>
+									<p>Marks {q1Marks}</p>
+								</div>
+								<div>
+									{q1Image && (
+										<img
+											src={q1Image}
+											alt=""
+											id="image-preview"
+											className="w-full"
+										/>
+									)}
+									{q1Desc && (
+										<p className="mt-3.5 mr-8 text-l">{q1Desc}</p>
+									)}
+								</div>
+								<Q1Component
+									q1Categories={q1Categories}
+									q1Options={q1Options}
+								/>
+							</section>
+						)}
+						{displayQ2 && (
+							<section className=" w-1/2 m-auto  mt-8  px-2 border">
+								<div className="flex justify-between items-center">
+									<h2 className="text-2xl">Question 2</h2>
+									<p>Marks {q2Marks}</p>
+								</div>
+								<div>
+									{q2Image && (
+										<img
+											src={q2Image}
+											alt=""
+											id="image-preview"
+											className="w-full"
+										/>
+									)}
+									{q2Desc && (
+										<p className="mt-3.5 mr-8 text-l">{q2Desc}</p>
+									)}
+								</div>
+								<Q2Component
+									sentence={q2Sentence}
+									wordsArray={q2Options}
+								/>
+							</section>
+						)}
+						{displayQ3 && (
+							<section className=" w-1/2 m-auto mt-8 px-2 border">
+								<div className="flex justify-between items-center">
+									<h2 className="text-2xl">Question 3</h2>
+									<p>Marks {q3Marks}</p>
+								</div>
+								<div>
+									{q3Image && (
+										<img
+											src={q3Image}
+											alt=""
+											id="image-preview"
+											className="w-full"
+										/>
+									)}
+									{q3Desc && (
+										<p className="mt-3.5 mr-8 text-l">{q3Desc}</p>
+									)}
+								</div>
+								<Q3Component paragraph={paragraph} mcqArray={mcq} />
+							</section>
+						)}
+						{displayQ3 && <section id="formBottom" className=" w-1/2 m-auto  mt-8">
 							<button
-								// onClick={checkValidity}
+								onClick={handleFormSubmit}
 								className="bg-emerald-400 p-1 ml-5 mt-3.5 px-2 rounded"
 							>
 								Submit Form
 							</button>
-						</section>
+						</section>}
 					</main>
 				</div>
+				{isProgress && (
+					<div
+						id="progress"
+						className="flex bg-green-200 pl-40 py-20 m-auto fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+					>
+						<div className="m-auto">
+							<progress id="file" value={progress} max="100">
+								{progress}{" "}
+							</progress>
+							<p>{progressText}</p>
+						</div>
+						<FontAwesomeIcon
+							icon={faXmark}
+							onClick={() => setIsProgress(false)}
+							className="mr-8 text-3xl cursor-pointer -mt-16 ml-40"
+						/>
+					</div>
+				)}
 			</div>
 		</div>
 	);
