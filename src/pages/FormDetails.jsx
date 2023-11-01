@@ -17,7 +17,7 @@ const navigation = [
 ];
 
 function FormDetails() {
-	const host = "http://localhost:5151";
+	const host = "https://form-backend-rq3w.onrender.com";
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const { id } = useParams();
 

@@ -16,7 +16,7 @@ import McqInputComponent from "../components/McqInput";
 const navigation = [{ name: "Create New Form", to: "/form/create" }];
 
 function CreateForm() {
-	const host = "http://localhost:5151";
+	const host = "https://form-backend-rq3w.onrender.com";
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 	const userInfo = JSON.parse(localStorage.getItem("userInfo"));
