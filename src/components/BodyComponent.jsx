@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 
-const navigation = [
-	{ name: "Product", to: "#" },
-	{ name: "Features", to: "#" },
-	{ name: "Marketplace", to: "#" },
-	{ name: "Company", to: "#" },
-];
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark, faBars } from "@fortawesome/free-solid-svg-icons";
+
+const navigation = [{ name: "Create New Form", to: "/form/create" }];
 
 function Body() {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,7 +17,7 @@ function Body() {
 					aria-label="Global"
 				>
 					<div className="flex lg:flex-1">
-						<Link to="#" className="-m-1.5 p-1.5">
+						<Link to="/" className="-m-1.5 p-1.5">
 							<span className="text-2xl font-semibold">
 								Form Builder
 							</span>
@@ -32,7 +30,7 @@ function Body() {
 							onClick={() => setMobileMenuOpen(true)}
 						>
 							<span className="sr-only">Open main menu</span>
-							{/* <Bars3Icon className="h-6 w-6" aria-hidden="true" /> */}
+							<FontAwesomeIcon icon={faBars} />
 						</button>
 					</div>
 					<div className="hidden lg:flex lg:gap-x-12">
@@ -64,15 +62,15 @@ function Body() {
 					<div className="fixed inset-0 z-50" />
 					<Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
 						<div className="flex items-center justify-between">
-							<Link to="#" className="-m-1.5 p-1.5">
+							<Link to="/" className="-m-1.5 p-1.5">
 								<span className="text-2xl font-semibold">
 									Form Builder
 								</span>
 								{/* <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                  alt=""
-                /> */}
+									className="h-8 w-auto"
+									src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+									alt=""
+								/> */}
 							</Link>
 							<button
 								type="button"
@@ -80,7 +78,7 @@ function Body() {
 								onClick={() => setMobileMenuOpen(false)}
 							>
 								<span className="sr-only">Close menu</span>
-								{/* <XMarkIcon className="h-6 w-6" aria-hidden="true" /> */}
+								<FontAwesomeIcon icon={faXmark} />
 							</button>
 						</div>
 						<div className="mt-6 flow-root">
@@ -123,7 +121,7 @@ function Body() {
 						}}
 					/>
 				</div>
-				
+
 				<div
 					className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
 					aria-hidden="true"
@@ -136,8 +134,6 @@ function Body() {
 						}}
 					/>
 				</div>
-
-                
 			</div>
 		</div>
 	);

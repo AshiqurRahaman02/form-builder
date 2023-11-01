@@ -2,55 +2,32 @@ import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 function Q2Component({ sentence, wordsArray }) {
-	console.log(wordsArray)
+	console.log(wordsArray);
 	const answer = new Array(sentence.split(" ").length).fill("###");
 
-	sentence.split(" ").forEach((element,index) => {
-		if(!wordsArray.includes(element)){
-			answer[index] = element
+	sentence.split(" ").forEach((element, index) => {
+		if (!wordsArray.includes(element)) {
+			answer[index] = element;
 		}
 	});
 
-    const [answerSentence, setAnswerSentence] = useState([...answer])
-	const [words, setWords] = useState(wordsArray);
-	const [blanks, setBlanks] = useState([]);
+	const [answerSentence, setAnswerSentence] = useState([...answer]);
 	const [remainingWords, setRemainingWords] = useState([...wordsArray]);
 
 	const handleDragEnd = (result) => {
 		if (!result.destination) return;
 
-		console.log(result.source)
+		console.log(result.source);
 
 		const draggedWord = remainingWords[result.source.index];
-		// const updatedWords = [...words];
-		// updatedWords.splice(result.source.index, 1);
-		// setWords(updatedWords);
 
-		// const droppedBlank = blanks[result.destination.index];
-		// const updatedBlanks = [...blanks];
-		// if (droppedBlank) {
-		// 	updatedWords.push(droppedBlank);
-		// 	updatedBlanks.splice(result.destination.index, 1);
-		// } else {
-		// 	setRemainingWords(
-		// 		remainingWords.filter((word) => word !== draggedWord)
-		// 	);
-		// 	updatedBlanks.push(draggedWord);
-		// }
+		setRemainingWords(remainingWords.filter((word) => word !== draggedWord));
 
-		// setWords(updatedWords);
-		// setBlanks(updatedBlanks);
+		const droppedIndex = result.destination.droppableId.split("-")[1];
+		answerSentence[droppedIndex] = draggedWord;
+		console.log(draggedWord, droppedIndex);
 
-		setRemainingWords(
-			remainingWords.filter((word) => word !== draggedWord)
-		);
-
-        const droppedIndex = result.destination.droppableId.split("-")[1]
-        answerSentence[droppedIndex] = draggedWord
-        console.log( draggedWord,droppedIndex);
-
-		setAnswerSentence([...answerSentence])
-
+		setAnswerSentence([...answerSentence]);
 	};
 
 	return (
@@ -78,24 +55,6 @@ function Q2Component({ sentence, wordsArray }) {
 					) : (
 						<span key={index}>{word} </span>
 					)
-					// <span key={index}>{word}{" "}</span>
-					// <Droppable
-					// 	key={`blank-${index}`}
-					// 	droppableId={`blank-${index}`}
-					// 	// isDropDisabled={!!blanks[index]}
-					// >
-					// 	{(provided, snapshot) => (
-					// 		<span
-					// 			ref={provided.innerRef}
-					// 			className={`blank ${
-					// 				snapshot.isDraggingOver ? "dragging-over" : ""
-					// 			}`}
-					// 		>
-					// 			{blanks[index] ? blanks[index]: <span>{word}{" "}</span>}
-					// 			{provided.placeholder}
-					// 		</span>
-					// 	)}
-					// </Droppable>
 				)}
 			</div>
 			<div className="word-list mt-3.5 ml-3.5 mr-8 text-xl">
