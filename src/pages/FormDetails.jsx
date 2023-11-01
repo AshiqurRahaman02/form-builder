@@ -1,24 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
-import Body from "../components/BodyComponent";
 import Q1Component from "../components/Q1Component";
 import Q2Component from "../components/Q2Component";
 import Q3Component from "../components/Q3Component";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faImage,
-	faUnderline,
-	faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faXmark, faBars } from "@fortawesome/free-solid-svg-icons";
 
 const navigation = [
-	{ name: "Product", to: "#" },
-	{ name: "Features", to: "#" },
-	{ name: "Marketplace", to: "#" },
-	{ name: "Company", to: "#" },
+	{ name: "Create New Form", to: "/form/create" },
+	// { name: "Features", to: "#" },
+	// { name: "Marketplace", to: "#" },
+	// { name: "Company", to: "#" },
 ];
 
 function FormDetails() {
@@ -29,16 +24,10 @@ function FormDetails() {
 	const [formName, setFormName] = useState("");
 	const [formDesc, setFormDesc] = useState("");
 	const [displayForm, setDisplayForm] = useState(false);
-	const [formImageHaves, setFormImageHaves] = useState(false);
 	const [headerImage, setHeaderImage] = useState("/images/heading_image.jpg");
-
-	const [q1Id, setQ1Id] = useState("");
-	const [q2Id, setQ2Id] = useState("");
-	const [q3Id, setQ3Id] = useState("");
 
 	const [q1Desc, setQ1Desc] = useState("");
 	const [q1Marks, setQ1Marks] = useState("");
-	const [q1ImageHave, setQ1ImageHave] = useState(false);
 	const [q1Categories, setQ1Categories] = useState([]);
 	const [q1Options, setQ1Options] = useState([]);
 	const [q1Image, setQ1Image] = useState();
@@ -46,22 +35,17 @@ function FormDetails() {
 
 	const [q2Desc, setQ2Desc] = useState("");
 	const [q2Marks, setQ2Marks] = useState("");
-	const [q2ImageHave, setQ2ImageHave] = useState(false);
-	const [q2PreviewSentence, setQ2PreviewSentence] = useState("");
 	const [q2Sentence, setQ2Sentence] = useState("");
 	const [q2Options, setQ2Options] = useState([]);
 	const [q2Image, setQ2Image] = useState();
 	const [displayQ2, setDisplayQ2] = useState(false);
-	const [selectedWords, setSelectedWords] = useState([]);
 
 	const [q3Desc, setQ3Desc] = useState("");
 	const [q3Marks, setQ3Marks] = useState("");
-	const [q3ImageHave, setQ3ImageHave] = useState(false);
 	const [paragraph, setParagraph] = useState("");
 	const [mcq, setMcq] = useState([]);
 	const [q3Image, setQ3Image] = useState();
 	const [displayQ3, setDisplayQ3] = useState(false);
-	const [mcqComponents, setMcqComponents] = useState([]);
 
 	const [progress, setProgress] = useState(50);
 	const [isProgress, setIsProgress] = useState(false);
@@ -93,12 +77,15 @@ function FormDetails() {
 
 		setFormName(res.form.name);
 		setFormDesc(res.form.description);
-		setHeaderImage(res.form.headerImage)
+		if (res.form.headerImage) {
+			setHeaderImage(res.form.headerImage);
+		}
 
 		setQ1Categories(q1.categories);
 		setQ1Options(q1.options);
 		setQ1Marks(q1.markOnCorrectAnswer);
 		setQ1Image(q1.q1Image);
+		setQ1Desc(q1.description)
 
 		setQ2Sentence(q2.correctAnswer);
 		let arr = q2.options.map((ele) => {
@@ -107,11 +94,13 @@ function FormDetails() {
 		setQ2Options(arr);
 		setQ2Marks(q2.markOnCorrectAnswer);
 		setQ2Image(q2.q2Image);
+		setQ2Desc(q2.description)
 
 		setParagraph(q3.paragraph);
 		setMcq(q3.mcq);
 		setQ3Marks(q3.markOnCorrectAnswer);
 		setQ3Image(q3.q3Image);
+		setQ3Desc(q3.description)
 
 		setTimeout(() => {
 			console.log(q2.options);
@@ -148,7 +137,7 @@ function FormDetails() {
 						aria-label="Global"
 					>
 						<div className="flex lg:flex-1">
-							<Link to="#" className="-m-1.5 p-1.5">
+							<Link to="/" className="-m-1.5 p-1.5">
 								<span className="text-2xl font-semibold">
 									Form Builder
 								</span>
@@ -161,7 +150,7 @@ function FormDetails() {
 								onClick={() => setMobileMenuOpen(true)}
 							>
 								<span className="sr-only">Open main menu</span>
-								{/* <Bars3Icon className="h-6 w-6" aria-hidden="true" /> */}
+								<FontAwesomeIcon icon={faBars} />
 							</button>
 						</div>
 						<div className="hidden lg:flex lg:gap-x-12">
@@ -193,7 +182,7 @@ function FormDetails() {
 						<div className="fixed inset-0 z-50" />
 						<Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
 							<div className="flex items-center justify-between">
-								<Link to="#" className="-m-1.5 p-1.5">
+								<Link to="/" className="-m-1.5 p-1.5">
 									<span className="text-2xl font-semibold">
 										Form Builder
 									</span>
@@ -209,7 +198,7 @@ function FormDetails() {
 									onClick={() => setMobileMenuOpen(false)}
 								>
 									<span className="sr-only">Close menu</span>
-									{/* <XMarkIcon className="h-6 w-6" aria-hidden="true" /> */}
+									<FontAwesomeIcon icon={faXmark} />
 								</button>
 							</div>
 							<div className="mt-6 flow-root">
@@ -357,14 +346,16 @@ function FormDetails() {
 								<Q3Component paragraph={paragraph} mcqArray={mcq} />
 							</section>
 						)}
-						{displayQ3 && <section id="formBottom" className=" w-1/2 m-auto  mt-8">
-							<button
-								onClick={handleFormSubmit}
-								className="bg-emerald-400 p-1 ml-5 mt-3.5 px-2 rounded"
-							>
-								Submit Form
-							</button>
-						</section>}
+						{displayQ3 && (
+							<section id="formBottom" className=" w-1/2 m-auto  mt-8">
+								<button
+									onClick={handleFormSubmit}
+									className="bg-emerald-400 p-1 ml-5 mt-3.5 px-2 rounded"
+								>
+									Submit Form
+								</button>
+							</section>
+						)}
 					</main>
 				</div>
 				{isProgress && (

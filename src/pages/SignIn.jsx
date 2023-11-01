@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
-import Body from "../components/BodyComponent";
 import Login from "../components/Login";
 import Register from "../components/Register";
 
-const navigation = [
-	{ name: "Product", to: "#" },
-	{ name: "Features", to: "#" },
-	{ name: "Marketplace", to: "#" },
-	{ name: "Company", to: "#" },
-];
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faXmark,
+	faBars,
+} from "@fortawesome/free-solid-svg-icons";
+
+const navigation = [{ name: "Create New Form", to: "/form/create" }];
 
 function SignIn() {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -42,7 +42,7 @@ function SignIn() {
 								onClick={() => setMobileMenuOpen(true)}
 							>
 								<span className="sr-only">Open main menu</span>
-								{/* <Bars3Icon className="h-6 w-6" aria-hidden="true" /> */}
+								<FontAwesomeIcon icon={faBars} />
 							</button>
 						</div>
 						<div className="hidden lg:flex lg:gap-x-12">
@@ -79,10 +79,10 @@ function SignIn() {
 										Form Builder
 									</span>
 									{/* <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                  alt=""
-                /> */}
+										className="h-8 w-auto"
+										src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+										alt=""
+									/> */}
 								</Link>
 								<button
 									type="button"
@@ -90,7 +90,7 @@ function SignIn() {
 									onClick={() => setMobileMenuOpen(false)}
 								>
 									<span className="sr-only">Close menu</span>
-									{/* <XMarkIcon className="h-6 w-6" aria-hidden="true" /> */}
+									<FontAwesomeIcon icon={faXmark} />
 								</button>
 							</div>
 							<div className="mt-6 flow-root">
@@ -149,20 +149,29 @@ function SignIn() {
 					<main className="mt-16">
 						<div className="w-max m-auto mt-8">
 							{signin ? <Login /> : <Register />}
-							<div className='mt-8'>
-							{signin ? (
-								<p>
-									Don't have an account?{" "}
-									<button onClick={toggleForms} className=" border-2 px-1">Sign Up</button>
-								</p>
-							) : (
-								<p>
-									Allready have an account?{" "}
-									<button onClick={toggleForms} className="border-2 px-1">Sign In</button>
-								</p>
-							)}
+							<div className="mt-8">
+								{signin ? (
+									<p>
+										Don't have an account?{" "}
+										<button
+											onClick={toggleForms}
+											className=" border-2 px-1"
+										>
+											Sign Up
+										</button>
+									</p>
+								) : (
+									<p>
+										Allready have an account?{" "}
+										<button
+											onClick={toggleForms}
+											className="border-2 px-1"
+										>
+											Sign In
+										</button>
+									</p>
+								)}
 							</div>
-							
 						</div>
 					</main>
 				</div>

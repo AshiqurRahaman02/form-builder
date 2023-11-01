@@ -2,32 +2,32 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-    const host = "http://localhost:5151"
+	const host = "http://localhost:5151";
 	const [showPassword, setShowPassword] = useState(false);
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
 	});
 
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
 	};
 
-    const handelSubmit = (e) =>{
-        e.preventDefault();
-        console.log(formData)
+	const handelSubmit = (e) => {
+		e.preventDefault();
+		console.log(formData);
 
-        if(formData.password && formData.email){
-            signInFunction()
-        }else{
-            alert("Please fill all fields")
-        }
-    }
+		if (formData.password && formData.email) {
+			signInFunction();
+		} else {
+			alert("Please fill all fields");
+		}
+	};
 
-    const signInFunction = () => {
+	const signInFunction = () => {
 		let user = {
 			email: formData.email,
 			password: formData.password,

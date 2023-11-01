@@ -4,15 +4,23 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHand, faXmark, faPlus } from "@fortawesome/free-solid-svg-icons";
 
-function InputList({ Title, setCategories, categories , options, setQ1Options}) {
+function InputList({
+	Title,
+	setCategories,
+	categories,
+	options,
+	setQ1Options,
+}) {
 	const [inputs, setInputs] = useState([{ id: "input-0", value: "" }]);
-    const [selectedValues, setSelectedValues] = useState(Array(inputs.length).fill(''));
+	const [selectedValues, setSelectedValues] = useState(
+		Array(inputs.length).fill("")
+	);
 
 	const handleInputChange = (event, inputId) => {
 		const updatedInputs = inputs.map((input) => {
 			if (input.id === inputId) {
-                let index = input.id.split('-')[1]
-                console.log(options[index])
+				let index = input.id.split("-")[1];
+				console.log(options[index]);
 				return { ...input, value: event.target.value };
 			}
 			return input;
@@ -24,18 +32,18 @@ function InputList({ Title, setCategories, categories , options, setQ1Options}) 
 		}
 	};
 
-    const handleSelectChange = (index, value) => {
-        const updatedValues = [...selectedValues];
-        updatedValues[index] = value;
-        setSelectedValues(updatedValues);
+	const handleSelectChange = (index, value) => {
+		const updatedValues = [...selectedValues];
+		updatedValues[index] = value;
+		setSelectedValues(updatedValues);
 
-        console.log(inputs[index].value,updatedValues[index])
-        options[index]={
-            option: inputs[index].value,
+		console.log(inputs[index].value, updatedValues[index]);
+		options[index] = {
+			option: inputs[index].value,
 			correctCategory: updatedValues[index],
-        }
-        console.log(options)
-      };
+		};
+		console.log(options);
+	};
 
 	const handleDragEnd = (result) => {
 		if (!result.destination) return;
@@ -55,7 +63,6 @@ function InputList({ Title, setCategories, categories , options, setQ1Options}) 
 
 	const addInput = () => {
 		const newInputId = `input-${inputs.length}`;
-		// handleAddCategory(newInputId);
 		setInputs([...inputs, { id: newInputId, value: "" }]);
 	};
 
@@ -99,8 +106,17 @@ function InputList({ Title, setCategories, categories , options, setQ1Options}) 
 												/>
 											)}
 											{input.value && Title === "Option" && (
-												<select name="" id="" value={selectedValues[index]}
-                                                onChange={(e) => handleSelectChange(index, e.target.value)}>
+												<select
+													name=""
+													id=""
+													value={selectedValues[index]}
+													onChange={(e) =>
+														handleSelectChange(
+															index,
+															e.target.value
+														)
+													}
+												>
 													<option value="">
 														Select Correct Category
 													</option>
@@ -123,7 +139,12 @@ function InputList({ Title, setCategories, categories , options, setQ1Options}) 
 					)}
 				</Droppable>
 			</DragDropContext>
-			<button onClick={addInput} className="bg-cyan-300 p-1 ml-7 mt-2 rounded">Add {Title} <FontAwesomeIcon icon={faPlus} /></button>
+			<button
+				onClick={addInput}
+				className="bg-cyan-300 p-1 ml-7 mt-2 rounded"
+			>
+				Add {Title} <FontAwesomeIcon icon={faPlus} />
+			</button>
 		</div>
 	);
 }

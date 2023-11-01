@@ -74,14 +74,6 @@ function McqInputComponent({ index, mcq, setMcq }) {
 						checked={input.checked}
 						onChange={() => handleCheckboxChange(index)}
 					/>
-					{/* <input
-						type="text"
-						placeholder="Label"
-						value={input.label}
-						onChange={(e) =>
-							handleInputChange(index, e.target.value, input.input)
-						}
-					/> */}
 					<input
 						type="text"
 						placeholder={"Enter Option " + (index + 1)}
@@ -93,7 +85,10 @@ function McqInputComponent({ index, mcq, setMcq }) {
 					/>
 				</div>
 			))}
-			<button onClick={addCheckboxInput} className="mt-2 ml-3.5 bg-cyan-300 p-1 ml-7 mt-2 rounded">
+			<button
+				onClick={addCheckboxInput}
+				className="mt-2 ml-3.5 bg-cyan-300 p-1 ml-7 mt-2 rounded"
+			>
 				Add Option
 			</button>
 		</div>

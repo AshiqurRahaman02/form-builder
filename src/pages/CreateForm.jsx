@@ -3,11 +3,7 @@ import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faImage,
-	faUnderline,
-	faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faImage, faXmark, faBars } from "@fortawesome/free-solid-svg-icons";
 
 import "../App.css";
 import InputList from "../components/InputList";
@@ -17,14 +13,7 @@ import Q3Component from "../components/Q3Component";
 import WordList from "../components/WordList";
 import McqInputComponent from "../components/McqInput";
 
-// 6541ecd3ae74f9b78eb8ee90
-
-const navigation = [
-	{ name: "Product", to: "#" },
-	{ name: "Features", to: "#" },
-	{ name: "Marketplace", to: "#" },
-	{ name: "Company", to: "#" },
-];
+const navigation = [{ name: "Create New Form", to: "/form/create" }];
 
 function CreateForm() {
 	const host = "http://localhost:5151";
@@ -35,12 +24,7 @@ function CreateForm() {
 
 	const [formName, setFormName] = useState("");
 	const [formDesc, setFormDesc] = useState("");
-	const [formImageHaves, setFormImageHaves] = useState(false);
 	const [headerImage, setHeaderImage] = useState("/images/heading_image.jpg");
-
-	const [q1Id, setQ1Id] = useState("");
-	const [q2Id, setQ2Id] = useState("");
-	const [q3Id, setQ3Id] = useState("");
 
 	const [q1Desc, setQ1Desc] = useState("");
 	const [q1Marks, setQ1Marks] = useState("");
@@ -53,7 +37,6 @@ function CreateForm() {
 	const [q2Desc, setQ2Desc] = useState("");
 	const [q2Marks, setQ2Marks] = useState("");
 	const [q2ImageHave, setQ2ImageHave] = useState(false);
-	const [q2PreviewSentence, setQ2PreviewSentence] = useState("");
 	const [q2Sentence, setQ2Sentence] = useState("");
 	const [q2Options, setQ2Options] = useState([]);
 	const [q2Image, setQ2Image] = useState();
@@ -78,7 +61,7 @@ function CreateForm() {
 	const [formData, setFormData] = useState({
 		name: "",
 		description: "",
-		image: null, // to store the selected image file
+		image: null,
 	});
 
 	const uploadImage = (image, type) => {
@@ -94,7 +77,6 @@ function CreateForm() {
 				if (res.isError) {
 				} else {
 					if (type === "form") {
-						setFormImageHaves(true);
 						setHeaderImage(res.imageResult.url);
 					} else if (type === "q1") {
 						setQ1ImageHave(true);
@@ -119,10 +101,8 @@ function CreateForm() {
 		const imageFile = e.target.files[0];
 		setFormData({ ...formData, image: imageFile });
 
-		// To preview the selected image
 		const reader = new FileReader();
 		reader.onload = (e) => {
-			setFormImageHaves(true);
 			setHeaderImage(e.target.result);
 			uploadImage(imageFile, "form");
 		};
@@ -133,7 +113,6 @@ function CreateForm() {
 		const imageFile = e.target.files[0];
 		setFormData({ ...formData, image: imageFile });
 
-		// To preview the selected image
 		const reader = new FileReader();
 		reader.onload = (e) => {
 			setQ1ImageHave(true);
@@ -147,7 +126,6 @@ function CreateForm() {
 		const imageFile = e.target.files[0];
 		setFormData({ ...formData, image: imageFile });
 
-		// To preview the selected image
 		const reader = new FileReader();
 		reader.onload = (e) => {
 			setQ2ImageHave(true);
@@ -161,7 +139,6 @@ function CreateForm() {
 		const imageFile = e.target.files[0];
 		setFormData({ ...formData, image: imageFile });
 
-		// To preview the selected image
 		const reader = new FileReader();
 		reader.onload = (e) => {
 			setQ3ImageHave(true);
@@ -171,33 +148,19 @@ function CreateForm() {
 		reader.readAsDataURL(imageFile);
 	};
 
-	const addCategory = (index) => {
-		setQ1Categories(index);
-	};
-
 	const displayPreview = () => {
+		setQ1Preview(false);
 		console.log(q1Options, q1Categories);
 		setQ1Preview(true);
 	};
 
 	const displayQ2Preview = () => {
+		setQ2Preview(false);
 		setQ2Preview(true);
 	};
 
 	const displayQ3Preview = () => {
-		// const mcqData = mcqComponents.map((mcqComponent, index) => {
-		// 	console.log(mcqComponent)
-		// 	const question = mcqComponent[index].questionInputValue;
-		// 	const options = mcqComponent[index].options;
-		// 	const correctOption = mcqComponent[index].checkedOption;
-		// 	return {
-		// 	  question,
-		// 	  options,
-		// 	  correctOption,
-		// 	};
-		//   });
-
-		// Now you have an array of collected data from each McqInputComponent
+		setQ3Preview(false);
 		console.log(mcq);
 		setQ3Preview(true);
 	};
@@ -230,11 +193,6 @@ function CreateForm() {
 		);
 		setMcqComponents([...mcqComponents, newMcqComponent]);
 	};
-	// {
-	// 	correctOption: "jgjkgj"
-	// 	options: (3) ['adfadf', 'fhafdfdgsfdg', 'jgjkgj']
-	// 	question: "sfgsfdg"
-	// 	}
 
 	const checkValidity = () => {
 		setIsProgress(true);
@@ -395,7 +353,6 @@ function CreateForm() {
 					setIsProgress(false);
 					alert(res.message);
 				} else {
-					setQ1Id(res.q1._id);
 					console.log(res);
 					setProgress(52);
 					setProgressText("Uploading Question 2...");
@@ -431,7 +388,6 @@ function CreateForm() {
 					alert(res.message);
 					setIsProgress(false);
 				} else {
-					setQ2Id(res.q2._id);
 					console.log(res);
 					setProgress(65);
 					setProgressText("Uploading Question 3...");
@@ -466,7 +422,6 @@ function CreateForm() {
 					alert(res.message);
 					setIsProgress(false);
 				} else {
-					setQ3Id(res.q3._id);
 					console.log(res);
 					setProgress(80);
 					setProgressText("Uploading Form...");
@@ -554,7 +509,7 @@ function CreateForm() {
 							onClick={() => setMobileMenuOpen(true)}
 						>
 							<span className="sr-only">Open main menu</span>
-							{/* <Bars3Icon className="h-6 w-6" aria-hidden="true" /> */}
+							<FontAwesomeIcon icon={faBars} />
 						</button>
 					</div>
 					<div className="hidden lg:flex lg:gap-x-12">
@@ -591,10 +546,10 @@ function CreateForm() {
 									Form Builder
 								</span>
 								{/* <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                  alt=""
-                /> */}
+									className="h-8 w-auto"
+									src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+									alt=""
+								/> */}
 							</Link>
 							<button
 								type="button"
@@ -602,7 +557,7 @@ function CreateForm() {
 								onClick={() => setMobileMenuOpen(false)}
 							>
 								<span className="sr-only">Close menu</span>
-								{/* <XMarkIcon className="h-6 w-6" aria-hidden="true" /> */}
+								<FontAwesomeIcon icon={faXmark} />
 							</button>
 						</div>
 						<div className="mt-6 flow-root">
@@ -620,7 +575,7 @@ function CreateForm() {
 								</div>
 								<div className="py-6">
 									<Link
-										to="#"
+										to="/signin"
 										className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
 									>
 										Log in
@@ -846,19 +801,19 @@ function CreateForm() {
 											</span>
 										))}
 									</p>
-									{q2Sentence && (
+									{/* {q2Sentence && (
 										<FontAwesomeIcon
 											icon={faUnderline}
 											className="mt-5 ml-3.5 mr-8 cursor-pointer text-2xl"
 										/>
-									)}
+									)} */}
 								</div>
 								<input
 									type="text"
 									value={q2Sentence}
 									onChange={(e) => setQ2Sentence(e.target.value)}
-									placeholder="Enter the sentence"
-									className="mt-3.5 ml-3.5 mr-8 text-xl w-2/4 border-0 bg-transparent outline-none custom-placeholder border-b-4 border-sky-200"
+									placeholder="Enter the sentence. Double click on the word for selecting the word as blanks..."
+									className="mt-3.5 ml-3.5 mr-8 text-lg w-11/12 border-0 bg-transparent outline-none custom-placeholder border-b-4 border-sky-200"
 								/>
 								<WordList Title="Words" selectedWords={selectedWords} />
 							</div>
