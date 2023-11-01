@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage, faUnderline } from "@fortawesome/free-solid-svg-icons";
+import { faImage, faUnderline , faXmark} from "@fortawesome/free-solid-svg-icons";
 
 import "../App.css";
 import InputList from "../components/InputList";
@@ -13,6 +13,8 @@ import Q3Component from "../components/Q3Component";
 import WordList from "../components/WordList";
 import McqInputComponent from "../components/McqInput";
 
+// 6541ecd3ae74f9b78eb8ee90
+
 const navigation = [
 	{ name: "Product", to: "#" },
 	{ name: "Features", to: "#" },
@@ -21,12 +23,20 @@ const navigation = [
 ];
 
 function CreateForm() {
+	const host = "http://localhost:5151";
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+	const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+	const userId = userInfo._id;
 
 	const [formName, setFormName] = useState("");
 	const [formDesc, setFormDesc] = useState("");
 	const [formImageHaves, setFormImageHaves] = useState(false);
 	const [headerImage, setHeaderImage] = useState("/images/heading_image.jpg");
+
+	const [q1Id, setQ1Id] = useState("");
+	const [q2Id, setQ2Id] = useState("");
+	const [q3Id, setQ3Id] = useState("");
 
 	const [q1Desc, setQ1Desc] = useState("");
 	const [q1Marks, setQ1Marks] = useState("");
@@ -54,6 +64,12 @@ function CreateForm() {
 	const [q3Image, setQ3Image] = useState();
 	const [q3Preview, setQ3Preview] = useState(false);
 	const [mcqComponents, setMcqComponents] = useState([]);
+
+	const [progress, setProgress] = useState(50);
+	const [isProgress, setIsProgress] = useState(false);
+	const [progressText, setProgressText] = useState("progressing...");
+
+	const [url, setUrl] = useState("");
 
 	const [formData, setFormData] = useState({
 		name: "",
@@ -178,6 +194,299 @@ function CreateForm() {
 	// 	question: "sfgsfdg"
 	// 	}
 
+	const checkValidity = () => {
+		setIsProgress(true);
+		setProgress(0);
+		setProgressText("Checking Form validity...");
+		const isFormValid = formValidity();
+
+		if (isFormValid) {
+			setProgress(10);
+			setProgressText("Checking Question 1 validity...");
+			const isQ1Valid = q1Validity();
+
+			if (isQ1Valid) {
+				setProgress(20);
+				setProgressText("Checking Question 2 validity...");
+				const isQ2Valid = q2Validity();
+
+				if (isQ2Valid) {
+					setProgress(30);
+					setProgressText("Checking Question 3 validity...");
+					const isQ3Valid = q3Validity();
+
+					if (isQ3Valid) {
+						setProgress(40);
+						setProgressText("Uploading Question 1...");
+						createForm();
+					} else {
+						setIsProgress(false);
+					}
+				} else {
+					setIsProgress(false);
+				}
+			} else {
+				setIsProgress(false);
+			}
+		} else {
+			setIsProgress(false);
+		}
+	};
+
+	const formValidity = () => {
+		if (!formName) {
+			alert("Form name is required");
+			return false;
+		}
+		return true;
+	};
+	const q1Validity = () => {
+		if (!q1Marks) {
+			alert("Marks is required for Question 1");
+			return false;
+		}
+
+		console.log(q1Categories.length, q1Options.length);
+		if (q1Categories.length < 2) {
+			alert("Minimum 2 Categories is required for Question 1");
+			return false;
+		}
+
+		if (q1Options.length < 1) {
+			alert("Minimum 1 Option is required for Question 1");
+			return false;
+		}
+
+		return true;
+	};
+
+	const q2Validity = () => {
+		if (!q2Marks) {
+			alert("Marks is required for Question 2");
+			return false;
+		}
+
+		if (!q2Sentence) {
+			alert("Sentence is required for Question 2");
+			return false;
+		}
+
+		return true;
+	};
+
+	const q3Validity = () => {
+		if (!q3Marks) {
+			alert("Marks is required for Question 3");
+			return false;
+		}
+
+		if (!paragraph) {
+			alert("paragraph is required for Question 3");
+			return false;
+		}
+
+		console.log(mcq);
+
+		if (mcq.length < 1) {
+			alert("Minimum 1 mcq is required for Question 3");
+			return false;
+		}
+
+		const isMcqValid = mcqValidity(mcq);
+
+		return isMcqValid;
+	};
+
+	const mcqValidity = (mcq) => {
+		for (let i = 0; i < mcq.length; i++) {
+			let que = mcq[i];
+
+			if (!que.question) {
+				alert("Question is required for Question.3." + (i + 1));
+				return false;
+			}
+
+			if (!que.correctOption) {
+				alert("CorrectOption is required for Question.3." + (i + 1));
+				return false;
+			}
+
+			for (let j = 0; j < que.options.length; j++) {
+				let opt = que.options[j];
+
+				if (!opt) {
+					alert(
+						"Option is required for Question.3." + (i + 1) + "." + (j + 1)
+					);
+					return false;
+				}
+			}
+		}
+
+		return true;
+	};
+
+	const createForm = () => {
+		postQ1();
+	};
+
+	const postQ1 = () => {
+		let q1 = {
+			description: q1Desc,
+			categories: q1Categories,
+			options: q1Options,
+			markOnCorrectAnswer: q1Marks,
+		};
+
+		fetch(`${host}/q1/create`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(q1),
+		})
+			.then((res) => res.json())
+			.then((res) => {
+				if (res.isError) {
+					console.log(res);
+					setIsProgress(false);
+					alert(res.message);
+				} else {
+					setQ1Id(res.q1._id);
+					console.log(res);
+					setProgress(52);
+					setProgressText("Uploading Question 2...");
+					postQ2(res.q1._id);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+				setIsProgress(false);
+				alert(err.message);
+			});
+	};
+	const postQ2 = (q1ID) => {
+		let q2 = {
+			description: q2Desc,
+			preview: q2Sentence,
+			correctAnswer: q2Sentence,
+			markOnCorrectAnswer: q2Marks,
+			options: selectedWords,
+		};
+
+		fetch(`${host}/q2/create`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(q2),
+		})
+			.then((res) => res.json())
+			.then((res) => {
+				if (res.isError) {
+					alert(res.message);
+					setIsProgress(false);
+				} else {
+					setQ2Id(res.q2._id);
+					console.log(res);
+					setProgress(65);
+					setProgressText("Uploading Question 3...");
+					postQ3(q1ID, res.q2._id);
+				}
+			})
+			.catch((err) => {
+				setIsProgress(false);
+				console.log(err);
+				alert(err.message);
+			});
+	};
+	const postQ3 = (q1ID, q2ID) => {
+		let q3 = {
+			description: q3Desc,
+			paragraph: paragraph,
+			mcq: mcq,
+			markOnCorrectAnswer: q3Marks,
+		};
+
+		fetch(`${host}/q3/create`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(q3),
+		})
+			.then((res) => res.json())
+			.then((res) => {
+				if (res.isError) {
+					alert(res.message);
+					setIsProgress(false);
+				} else {
+					setQ3Id(res.q3._id);
+					console.log(res);
+					setProgress(80);
+					setProgressText("Uploading Form...");
+					postForm(q1ID, q2ID, res.q3._id);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+				setIsProgress(false);
+				alert(err.message);
+			});
+	};
+	const postForm = (q1, q2, q3) => {
+		let formData = {
+			name: formName,
+			description: formDesc,
+			adminId: userId,
+			q1,
+			q2,
+			q3,
+		};
+		console.log(formData);
+
+		fetch(`${host}/form/create`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(formData),
+		})
+			.then((res) => res.json())
+			.then((res) => {
+				if (res.isError) {
+					setIsProgress(false);
+					alert(res.message);
+				} else {
+					console.log(res.form);
+					// alert("Form created successfully");
+					setProgress(100);
+					setProgressText("Form created successfully...");
+					
+					let u = window.location.href.split("form")[0]
+					setUrl(`${u}form/${res.form._id}`)
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+				setIsProgress(false);
+				alert(err.message);
+			});
+	};
+
+	const handelCopyLink = () => {
+		let q = url;
+
+		navigator.clipboard.writeText(q).then(
+			function () {
+				alert("Link copied in clipboard");
+			},
+			function () {
+				alert("Failed to copy question");
+			}
+		);
+	};
+
 	return (
 		<div className="bg-white">
 			<header className="absolute inset-x-0 top-0 z-50">
@@ -186,7 +495,7 @@ function CreateForm() {
 					aria-label="Global"
 				>
 					<div className="flex lg:flex-1">
-						<Link to="#" className="-m-1.5 p-1.5">
+						<Link to="/" className="-m-1.5 p-1.5">
 							<span className="text-2xl font-semibold">
 								Form Builder
 							</span>
@@ -215,7 +524,7 @@ function CreateForm() {
 					</div>
 					<div className="hidden lg:flex lg:flex-1 lg:justify-end">
 						<Link
-							to="#"
+							to="/singin"
 							className="text-sm font-semibold leading-6 text-gray-900"
 						>
 							Log in <span aria-hidden="true">&rarr;</span>
@@ -231,7 +540,7 @@ function CreateForm() {
 					<div className="fixed inset-0 z-50" />
 					<Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
 						<div className="flex items-center justify-between">
-							<Link to="#" className="-m-1.5 p-1.5">
+							<Link to="/" className="-m-1.5 p-1.5">
 								<span className="text-2xl font-semibold">
 									Form Builder
 								</span>
@@ -637,8 +946,42 @@ function CreateForm() {
 							)}
 						</div>
 					</section>
+
+					<section id="formBottom">
+						<button
+							onClick={checkValidity}
+							className="bg-emerald-400 p-1 ml-5 mt-3.5 px-2 rounded"
+						>
+							Create Form
+						</button>
+					</section>
 				</main>
 			</div>
+
+			{isProgress && (
+				<div
+					id="progress"
+					className="flex bg-green-200 pl-40 py-20 m-auto fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+				>
+					<div className="m-auto">
+						<progress id="file" value={progress} max="100">
+							{progress}{" "}
+						</progress>
+						<p>{progressText}</p>
+						{url && <p id="link">
+							{url}
+							<button
+								className="border-2 bg-transparent outline-none custom-placeholder px-1 border-b-2 border-sky-200"
+								onClick={handelCopyLink}
+							>
+								Copy Link
+							</button>
+						</p>}
+					</div>
+					<FontAwesomeIcon icon={faXmark} onClick={()=> setIsProgress(false)} 
+										className="mr-8 text-3xl cursor-pointer -mt-16 ml-40"/>
+				</div>
+			)}
 		</div>
 	);
 }

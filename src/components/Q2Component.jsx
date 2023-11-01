@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 function Q2Component({ sentence, wordsArray }) {
+	console.log(wordsArray)
 	const answer = new Array(sentence.split(" ").length).fill("###");
 
 	sentence.split(" ").forEach((element,index) => {
