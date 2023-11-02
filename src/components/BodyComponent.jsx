@@ -1,14 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faBars } from "@fortawesome/free-solid-svg-icons";
 
-const navigation = [{ name: "Create New Form", to: "/form/create" }];
 
 function Body() {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+	const [nav , setNav] = useState({text:"Log in",to:"/signin"});
+	const [link , setLink] = useState({to:"/form/create"});
+	const [navigation,setNavigation] = useState([{ name: "Create New Form", to: "/form/create" }]);
+
+	useEffect(()=>{
+		const userInfo = JSON.parse(localStorage.getItem("userInfo"))
+		if(userInfo){
+			setNav({text:userInfo.name,to:"/"})
+		}else{
+			setNavigation([{ name: "Create New Form", to: "/signin" }])
+		}
+	},[])
 	return (
 		<div className="bg-white border">
 			<header className="absolute inset-x-0 top-0 z-50">
@@ -46,10 +57,10 @@ function Body() {
 					</div>
 					<div className="hidden lg:flex lg:flex-1 lg:justify-end">
 						<Link
-							to="/signin"
+							to={nav.to}
 							className="text-sm font-semibold leading-6 text-gray-900"
 						>
-							Log in <span aria-hidden="true">&rarr;</span>
+							{nav.text} <span aria-hidden="true">&rarr;</span>
 						</Link>
 					</div>
 				</nav>

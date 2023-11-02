@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
@@ -20,6 +21,35 @@ function FormDetails() {
 	const host = "https://form-backend-rq3w.onrender.com";
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const { id } = useParams();
+
+	const navigate = useNavigate();
+
+	const [nav, setNav] = useState({ text: "Log in", to: "/signin" });
+	const [link, setLink] = useState({ to: "/form/create" });
+	const [navigation, setNavigation] = useState([
+		{ name: "Create New Form", to: "/form/create" },
+	]);
+	const [userId, setUserId] = useState("");
+
+	useEffect(() => {
+		const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+		if (userInfo) {
+			setNav({ text: userInfo.name, to: "/" });
+			setUserId(userInfo._id);
+		} else {
+			
+
+			setTimeout(() => {
+				/* eslint-disable no-restricted-globals */
+			if (confirm("To fill a form, you have to log in first")) {
+				navigate("/signin");
+			} else {
+				navigate("/");
+			}
+			/* eslint-enable no-restricted-globals */
+			}, 1000);
+		}
+	}, []);
 
 	const [formName, setFormName] = useState("");
 	const [formDesc, setFormDesc] = useState("");
@@ -166,10 +196,10 @@ function FormDetails() {
 						</div>
 						<div className="hidden lg:flex lg:flex-1 lg:justify-end">
 							<Link
-								to="/signin"
+								to={nav.to}
 								className="text-sm font-semibold leading-6 text-gray-900"
 							>
-								Log in <span aria-hidden="true">&rarr;</span>
+								{nav.text} <span aria-hidden="true">&rarr;</span>
 							</Link>
 						</div>
 					</nav>
@@ -216,10 +246,10 @@ function FormDetails() {
 									</div>
 									<div className="py-6">
 										<Link
-											to="/signin"
+											to={nav.to}
 											className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
 										>
-											Log in
+											{nav.text} 
 										</Link>
 									</div>
 								</div>
