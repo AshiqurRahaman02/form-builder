@@ -70,7 +70,7 @@ function Q1Component({ q1Categories, q1Options }) {
 			style={{
 				display: "flex",
 				justifyContent: "center",
-				height: "100%",
+				// height: "100%",
 				flexWrap: "wrap",
 			}}
 		>
@@ -85,6 +85,7 @@ function Q1Component({ q1Categories, q1Options }) {
 									display: "flex",
 									flexDirection: "column",
 									alignItems: "center",
+									height:"max-content",
 								}}
 								key={columnId}
 							>
