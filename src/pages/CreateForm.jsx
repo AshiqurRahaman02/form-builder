@@ -489,8 +489,8 @@ function CreateForm() {
 					setProgress(100);
 					setProgressText("Form created successfully...");
 
-					let u = window.location.href.split("form")[0];
-					setUrl(`${u}form/${res.form._id}`);
+					let u = window.location.href.split("create")[0];
+					setUrl(`${u}${res.form._id}`);
 				}
 			})
 			.catch((err) => {
