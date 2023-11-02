@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 
@@ -13,14 +14,38 @@ import Q3Component from "../components/Q3Component";
 import WordList from "../components/WordList";
 import McqInputComponent from "../components/McqInput";
 
-const navigation = [{ name: "Create New Form", to: "/form/create" }];
-
 function CreateForm() {
 	const host = "https://form-backend-rq3w.onrender.com";
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-	const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-	const userId = userInfo._id;
+	const navigate = useNavigate();
+
+	const [nav, setNav] = useState({ text: "Log in", to: "/signin" });
+	const [link, setLink] = useState({ to: "/form/create" });
+	const [navigation, setNavigation] = useState([
+		{ name: "Create New Form", to: "/form/create" },
+	]);
+	const [userId, setUserId] = useState("");
+
+	useEffect(() => {
+		const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+		if (userInfo) {
+			setNav({ text: userInfo.name, to: "/" });
+			setUserId(userInfo._id);
+		} else {
+			
+
+			setTimeout(() => {
+				/* eslint-disable no-restricted-globals */
+			if (confirm("To create a form, you have to log in first")) {
+				navigate("/signin");
+			} else {
+				navigate("/");
+			}
+			/* eslint-enable no-restricted-globals */
+			}, 1000);
+		}
+	}, []);
 
 	const [formName, setFormName] = useState("");
 	const [formDesc, setFormDesc] = useState("");
@@ -525,10 +550,10 @@ function CreateForm() {
 					</div>
 					<div className="hidden lg:flex lg:flex-1 lg:justify-end">
 						<Link
-							to="/singin"
+							to={nav.to}
 							className="text-sm font-semibold leading-6 text-gray-900"
 						>
-							Log in <span aria-hidden="true">&rarr;</span>
+							{nav.text} <span aria-hidden="true">&rarr;</span>
 						</Link>
 					</div>
 				</nav>
@@ -575,10 +600,10 @@ function CreateForm() {
 								</div>
 								<div className="py-6">
 									<Link
-										to="/signin"
+										to={nav.to}
 										className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
 									>
-										Log in
+										{nav.text}
 									</Link>
 								</div>
 							</div>

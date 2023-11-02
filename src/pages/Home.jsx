@@ -1,9 +1,19 @@
+import React, { useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
 import Body from "../components/BodyComponent";
 
 
 function Home() {
+	const [link , setLink] = useState({to:"/form/create"});
+
+	useEffect(()=>{
+		const userInfo = JSON.parse(localStorage.getItem("userInfo"))
+		console.log(userInfo)
+		if(!userInfo){
+			setLink({to:"/signin"})
+		}
+	},[])
 
 	return (
 		<div className="bg-white">
@@ -12,7 +22,7 @@ function Home() {
 				<div className="hidden sm:mb-8 sm:flex sm:justify-center">
 					<div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
 					Design, Share, and Analyze Forms Like Never Before.{" "}
-						<Link to="/form/create" className="font-semibold text-indigo-600">
+						<Link to={link.to} className="font-semibold text-indigo-600">
 							<span className="absolute inset-0" aria-hidden="true" />
 							Create New Form <span aria-hidden="true">&rarr;</span>
 						</Link>
@@ -27,7 +37,7 @@ function Home() {
 					</p>
 					<div className="mt-10 flex items-center justify-center gap-x-6">
 						<Link
-							to="/form/create"
+							 to={link.to} 
 							className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 						>
 							Create New Form
