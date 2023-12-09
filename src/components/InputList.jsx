@@ -84,6 +84,7 @@ function InputList({
 											ref={provided.innerRef}
 											{...provided.draggableProps}
 											{...provided.dragHandleProps}
+											className=" w-max px-2 pb-3 ml-2 mt-3 drag-box-shadow"
 										>
 											<FontAwesomeIcon
 												icon={faHand}
@@ -96,7 +97,7 @@ function InputList({
 												onChange={(e) =>
 													handleInputChange(e, input.id)
 												}
-												className="mt-3.5  mr-8 text-l w-1/4 border bg-transparent outline-none custom-placeholder pl-1 border-b-2 border-sky-200"
+												className="mt-3.5  mr-8 text-l   bg-transparent outline-none custom-placeholder p-1 border-b-2 border-gray-200   font-semibold leading-6 text-gray-900"
 											/>
 											{input.value && (
 												<FontAwesomeIcon
@@ -141,9 +142,9 @@ function InputList({
 			</DragDropContext>
 			<button
 				onClick={addInput}
-				className="bg-cyan-300 p-1 ml-7 mt-2 rounded"
+				className="bg-cyan-300 p-1 ml-2 mt-2 rounded custom-add-button"
 			>
-				Add {Title} <FontAwesomeIcon icon={faPlus} />
+				Add {Title} <FontAwesomeIcon icon={faPlus} className="ml-1"/>
 			</button>
 		</div>
 	);

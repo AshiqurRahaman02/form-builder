@@ -37,16 +37,14 @@ function FormDetails() {
 			setNav({ text: userInfo.name, to: "/" });
 			setUserId(userInfo._id);
 		} else {
-			
-
 			setTimeout(() => {
 				/* eslint-disable no-restricted-globals */
-			if (confirm("To fill a form, you have to log in first")) {
-				navigate("/signin");
-			} else {
-				navigate("/");
-			}
-			/* eslint-enable no-restricted-globals */
+				if (confirm("To fill a form, you have to log in first")) {
+					navigate("/signin");
+				} else {
+					navigate("/");
+				}
+				/* eslint-enable no-restricted-globals */
 			}, 1000);
 		}
 	}, []);
@@ -115,7 +113,7 @@ function FormDetails() {
 		setQ1Options(q1.options);
 		setQ1Marks(q1.markOnCorrectAnswer);
 		setQ1Image(q1.q1Image);
-		setQ1Desc(q1.description)
+		setQ1Desc(q1.description);
 
 		setQ2Sentence(q2.correctAnswer);
 		let arr = q2.options.map((ele) => {
@@ -124,13 +122,13 @@ function FormDetails() {
 		setQ2Options(arr);
 		setQ2Marks(q2.markOnCorrectAnswer);
 		setQ2Image(q2.q2Image);
-		setQ2Desc(q2.description)
+		setQ2Desc(q2.description);
 
 		setParagraph(q3.paragraph);
 		setMcq(q3.mcq);
 		setQ3Marks(q3.markOnCorrectAnswer);
 		setQ3Image(q3.q3Image);
-		setQ3Desc(q3.description)
+		setQ3Desc(q3.description);
 
 		setTimeout(() => {
 			console.log(q2.options);
@@ -249,7 +247,7 @@ function FormDetails() {
 											to={nav.to}
 											className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
 										>
-											{nav.text} 
+											{nav.text}
 										</Link>
 									</div>
 								</div>
@@ -287,9 +285,9 @@ function FormDetails() {
 
 					<main className="mt-16">
 						{displayForm && (
-							<section className=" w-1/2  m-auto border">
+							<section className=" w-1/2  m-auto custom-box-shadow">
 								<div className="absolute">
-									<h1 className="mt-3.5 ml-3.5 mr-8 text-4xl">
+									<h1 className="mt-3.5 ml-3.5 mr-8 text-3xl font-medium">
 										{formName}
 									</h1>
 									<p className="mt-3.5 ml-3.5 mr-8 text-xl">
@@ -300,12 +298,12 @@ function FormDetails() {
 									src={headerImage}
 									alt=""
 									id="image-preview"
-									className="w-full h-36 "
+									className="w-full h-36 rounded-md"
 								/>
 							</section>
 						)}
 						{displayQ1 && (
-							<section className=" w-1/2 m-auto mt-8 px-2 border">
+							<section className=" w-1/2 m-auto mt-8 p-2  custom-box-shadow">
 								<div className="flex justify-between items-center">
 									<h2 className="text-2xl">Question 1</h2>
 									<p>Marks {q1Marks}</p>
@@ -330,7 +328,7 @@ function FormDetails() {
 							</section>
 						)}
 						{displayQ2 && (
-							<section className=" w-1/2 m-auto  mt-8  px-2 border">
+							<section className=" w-1/2 m-auto  mt-8  px-2  custom-box-shadow">
 								<div className="flex justify-between items-center">
 									<h2 className="text-2xl">Question 2</h2>
 									<p>Marks {q2Marks}</p>
@@ -355,7 +353,7 @@ function FormDetails() {
 							</section>
 						)}
 						{displayQ3 && (
-							<section className=" w-1/2 m-auto mt-8 px-2 border">
+							<section className=" w-1/2 m-auto mt-8 px-2  custom-box-shadow">
 								<div className="flex justify-between items-center">
 									<h2 className="text-2xl">Question 3</h2>
 									<p>Marks {q3Marks}</p>
@@ -378,11 +376,18 @@ function FormDetails() {
 						)}
 						{displayQ3 && (
 							<section id="formBottom" className=" w-1/2 m-auto  mt-8">
-								<button
+								{/* <button
 									onClick={handleFormSubmit}
 									className="bg-emerald-400 p-1 ml-5 mt-3.5 px-2 rounded"
 								>
 									Submit Form
+								</button> */}
+								<button class="submit-button" onClick={handleFormSubmit}>
+									<span class="txt">submit</span>
+									<span class="txt2">submitted</span>
+									<span class="loader-container">
+										<span class="loader"></span>
+									</span>
 								</button>
 							</section>
 						)}
