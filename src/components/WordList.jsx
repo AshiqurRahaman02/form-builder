@@ -55,13 +55,15 @@ function WordList({ Title, selectedWords }) {
 											ref={provided.innerRef}
 											{...provided.draggableProps}
 											{...provided.dragHandleProps}
-											className="flex"
+											// className="flex"
+											
+											className="flex w-max px-2 py-3 ml-2 mt-3 drag-box-shadow"
 										>
 											<FontAwesomeIcon
 												icon={faHand}
 												className="text-xl opacity-25 hover:opacity-100 transition-opacity mr-2"
 											/>
-											<p className=" mr-8 text-l  border bg-transparent outline-none custom-placeholder px-1 border-b-2 border-sky-200">
+											<p className="  text-l   bg-transparent outline-none custom-placeholder px-1  font-semibold leading-6 text-gray-900">
 												{input.selectedWord}
 											</p>
 											{/* <FontAwesomeIcon

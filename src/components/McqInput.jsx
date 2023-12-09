@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage, faXmark, faBars, faPlus } from "@fortawesome/free-solid-svg-icons";
+
 function McqInputComponent({ index, mcq, setMcq }) {
 	const [question, setQuestion] = useState("");
 	const [checkboxInputs, setCheckboxInputs] = useState([
@@ -65,7 +69,7 @@ function McqInputComponent({ index, mcq, setMcq }) {
 				placeholder="Enter Question"
 				value={question}
 				onChange={(e) => setQuestion(e.target.value)}
-				className="mt-3.5 ml-3.5 mr-8 text-lg w-2/4 border-0 bg-transparent outline-none custom-placeholder border-b-4 border-sky-200"
+				className="mt-3.5 ml-3.5 mr-8 text-lg w-2/4 border-0 bg-transparent outline-none custom-placeholder border-b-2 border-gray-400"
 			/>
 			{checkboxInputs.map((input, index) => (
 				<div key={index} className=" ml-3.5">
@@ -78,7 +82,7 @@ function McqInputComponent({ index, mcq, setMcq }) {
 						type="text"
 						placeholder={"Enter Option " + (index + 1)}
 						value={input.input}
-						className="mt-3.5 ml-2 mr-8 text-base w-2/4 border-0 bg-transparent outline-none custom-placeholder  border-b-2 border-sky-200"
+						className="mt-3.5 ml-2 mr-8 text-base w-5/12 border-0 bg-transparent outline-none custom-placeholder  border-b-2 border-gray-200"
 						onChange={(e) =>
 							handleInputChange(index, input.label, e.target.value)
 						}
@@ -87,9 +91,9 @@ function McqInputComponent({ index, mcq, setMcq }) {
 			))}
 			<button
 				onClick={addCheckboxInput}
-				className="mt-2 ml-3.5 bg-cyan-300 p-1 ml-7 mt-2 rounded"
+				className="mt-2  bg-cyan-300 p-1 ml-2 mt-2 custom-add-button"
 			>
-				Add Option
+				Add Option <FontAwesomeIcon icon={faPlus} className="ml-1"/>
 			</button>
 		</div>
 	);
