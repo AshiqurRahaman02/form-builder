@@ -20,6 +20,7 @@ import WordList from "../components/WordList";
 import McqInputComponent from "../components/McqInput";
 
 function CreateForm() {
+	// const host = "http://localhost:5151";
 	const host = "https://form-backend-rq3w.onrender.com";
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -367,7 +368,7 @@ function CreateForm() {
 			markOnCorrectAnswer: q1Marks,
 		};
 
-		fetch(`${host}/q1/create`, {
+		fetch(`${host}/question/question1/create`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -403,7 +404,7 @@ function CreateForm() {
 			options: selectedWords,
 		};
 
-		fetch(`${host}/q2/create`, {
+		fetch(`${host}/question/question2/create`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -437,7 +438,7 @@ function CreateForm() {
 			markOnCorrectAnswer: q3Marks,
 		};
 
-		fetch(`${host}/q3/create`, {
+		fetch(`${host}/question/question3/create`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -1033,7 +1034,7 @@ function CreateForm() {
 						</button> */}
 						<button class="cssbuttons-io-button" onClick={checkValidity}>
 							{" "}
-							Get started
+							Create Form
 							<div class="icon">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
