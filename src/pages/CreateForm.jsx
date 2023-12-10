@@ -421,11 +421,11 @@ function CreateForm() {
 
 	const postQ1 = () => {
 		let q1 = {
-			description: question1.q1Desc,
-			categories: question1.q1Categories,
-			options: question1.q1Options,
-			q1Image: question1.q1Image,
-			markOnCorrectAnswer: question1.q1Marks,
+			description: question1.question1Description,
+			categories: question1.question1Categories,
+			options: question1.question1Options,
+			q1Image: question1.question1Image,
+			markOnCorrectAnswer: question1.question1Marks,
 		};
 
 		fetch(`${host}/question/question1/create`, {
