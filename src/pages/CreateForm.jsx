@@ -13,21 +13,19 @@ import {
 
 import "../App.css";
 import InputList from "../components/InputList";
-import Q1Component from "../components/Q1Component";
-import Q2Component from "../components/Q2Component";
-import Q3Component from "../components/Q3Component";
+import Question1Component from "../components/Question1Component";
+import Question2Component from "../components/Question2Component";
+import Question3Component from "../components/Question3Component";
 import WordList from "../components/WordList";
 import McqInputComponent from "../components/McqInput";
 
 function CreateForm() {
-	// const host = "http://localhost:5151";
 	const host = "https://form-backend-rq3w.onrender.com";
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 	const navigate = useNavigate();
 
 	const [nav, setNav] = useState({ text: "Log in", to: "/signin" });
-	const [link, setLink] = useState({ to: "/form/create" });
 	const [navigation, setNavigation] = useState([
 		{ name: "Create New Form", to: "/form/create" },
 	]);
@@ -55,30 +53,37 @@ function CreateForm() {
 	const [formDesc, setFormDesc] = useState("");
 	const [headerImage, setHeaderImage] = useState("/images/header_image.jpg");
 
-	const [q1Desc, setQ1Desc] = useState("");
-	const [q1Marks, setQ1Marks] = useState("");
-	const [q1ImageHave, setQ1ImageHave] = useState(false);
-	const [q1Categories, setQ1Categories] = useState([]);
-	const [q1Options, setQ1Options] = useState([]);
-	const [q1Image, setQ1Image] = useState();
-	const [q1Preview, setQ1Preview] = useState(false);
+	const [question1, setQuestion1] = useState({
+		question1Description: "",
+		question1Marks: "",
+		question1ImageHave: false,
+		question1Categories: [],
+		question1Options: [],
+		question1Image: "",
+		question1Preview: false,
+	});
 
-	const [q2Desc, setQ2Desc] = useState("");
-	const [q2Marks, setQ2Marks] = useState("");
-	const [q2ImageHave, setQ2ImageHave] = useState(false);
-	const [q2Sentence, setQ2Sentence] = useState("");
-	const [q2Options, setQ2Options] = useState([]);
-	const [q2Image, setQ2Image] = useState();
-	const [q2Preview, setQ2Preview] = useState(false);
-	const [selectedWords, setSelectedWords] = useState([]);
+	const [question2, setQuestion2] = useState({
+		question2Description: "",
+		question2Marks: "",
+		question2ImageHave: false,
+		question2Sentence: "",
+		question2Options: [],
+		question2Image: "",
+		question2Preview: false,
+		selectedWords: [],
+	});
 
-	const [q3Desc, setQ3Desc] = useState("");
-	const [q3Marks, setQ3Marks] = useState("");
-	const [q3ImageHave, setQ3ImageHave] = useState(false);
-	const [paragraph, setParagraph] = useState("");
-	const [mcq, setMcq] = useState([]);
-	const [q3Image, setQ3Image] = useState();
-	const [q3Preview, setQ3Preview] = useState(false);
+	const [question3, setQuestion3] = useState({
+		question3Description: "",
+		question3Marks: "",
+		question3ImageHave: false,
+		paragraph: "",
+		mcq: [],
+		question3Image: "",
+		question3Preview: false,
+		mcqComponents: [],
+	});
 	const [mcqComponents, setMcqComponents] = useState([]);
 
 	const [progress, setProgress] = useState(50);
@@ -104,18 +109,28 @@ function CreateForm() {
 			.then((res) => res.json())
 			.then((res) => {
 				if (res.isError) {
+					console.log("Error uploading image", res.message);
 				} else {
 					if (type === "form") {
 						setHeaderImage(res.imageResult.url);
 					} else if (type === "q1") {
-						setQ1ImageHave(true);
-						setQ1Image(res.imageResult.url);
+						setQuestion1({
+							...question1,
+							question1ImageHave: true,
+							question1Image: res.imageResult.url,
+						});
 					} else if (type === "q2") {
-						setQ2ImageHave(true);
-						setQ2Image(res.imageResult.url);
+						setQuestion2({
+							...question2,
+							question2ImageHave: true,
+							question2Image: res.imageResult.url,
+						});
 					} else if (type === "q3") {
-						setQ3ImageHave(true);
-						setQ3Image(res.imageResult.url);
+						setQuestion2({
+							...question3,
+							question2ImageHave: true,
+							question2Image: res.imageResult.url,
+						});
 					}
 				}
 			})
@@ -144,8 +159,12 @@ function CreateForm() {
 
 		const reader = new FileReader();
 		reader.onload = (e) => {
-			setQ1ImageHave(true);
-			setQ1Image(e.target.result);
+			setQuestion1({
+				...question1,
+				question1ImageHave: true,
+				question1Image: e.target.result,
+			});
+
 			uploadImage(imageFile, "q1");
 		};
 		reader.readAsDataURL(imageFile);
@@ -157,8 +176,12 @@ function CreateForm() {
 
 		const reader = new FileReader();
 		reader.onload = (e) => {
-			setQ2ImageHave(true);
-			setQ2Image(e.target.result);
+			setQuestion2({
+				...question2,
+				question2ImageHave: true,
+				question2Image: e.target.result,
+			});
+
 			uploadImage(imageFile, "q2");
 		};
 		reader.readAsDataURL(imageFile);
@@ -170,28 +193,59 @@ function CreateForm() {
 
 		const reader = new FileReader();
 		reader.onload = (e) => {
-			setQ3ImageHave(true);
-			setQ3Image(e.target.result);
+			setQuestion3({
+				...question3,
+				question3ImageHave: true,
+				question3Image: e.target.result,
+			});
+
 			uploadImage(imageFile, "q3");
 		};
 		reader.readAsDataURL(imageFile);
 	};
 
 	const displayPreview = () => {
-		setQ1Preview(false);
-		console.log(q1Options, q1Categories);
-		setQ1Preview(true);
+		setQuestion1({
+			...question1,
+			question1Preview: false,
+		});
+
+		console.log(question1.question1Options, question1.question1Categories);
+
+		setTimeout(() => {
+			setQuestion1({
+				...question1,
+				question1Preview: true,
+			});
+		}, 1000);
 	};
 
 	const displayQ2Preview = () => {
-		setQ2Preview(false);
-		setQ2Preview(true);
+		setQuestion2({
+			...question2,
+			question2Preview: false,
+		});
+
+		setTimeout(() => {
+			setQuestion2({
+				...question2,
+				question2Preview: true,
+			});
+		}, 1000);
 	};
 
 	const displayQ3Preview = () => {
-		setQ3Preview(false);
-		console.log(mcq);
-		setQ3Preview(true);
+		setQuestion3({
+			...question3,
+			question3Preview: false,
+		});
+
+		setTimeout(() => {
+			setQuestion3({
+				...question3,
+				question3Preview: true,
+			});
+		}, 1000);
 	};
 
 	const handleWordDoubleClick = (e) => {
@@ -202,9 +256,11 @@ function CreateForm() {
 			id,
 			selectedWord,
 		};
-		setSelectedWords([...selectedWords, obj]);
-		setQ2Options([...q2Options, selectedWord]);
-		console.log(selectedWords);
+		setQuestion2({
+			...question2,
+			selectedWords: [...question2.selectedWords, obj],
+			question2Options: [...question2.question2Options, selectedWord],
+		});
 
 		console.log(`Selected word: ${selectedWord} ${id}`);
 		// You can perform further actions with the selected word here.
@@ -216,17 +272,23 @@ function CreateForm() {
 			<McqInputComponent
 				key={mcqComponents.length}
 				index={mcqComponents.length}
-				mcq={mcq}
-				setMcq={setMcq}
+				question3={question3}
+				setQuestion3={setQuestion3}
 			/>
 		);
+
+		// setQuestion3({
+		// 	...question3,
+		// 	mcqComponents: [...question3.mcqComponents, newMcqComponent]
+		// });
+
 		setMcqComponents([...mcqComponents, newMcqComponent]);
 	};
 
 	const checkValidity = () => {
+		console.log(`Checking validity`);
 		setIsProgress(true);
-		setProgress(0);
-		setProgressText("Checking Form validity...");
+
 		const isFormValid = formValidity();
 
 		if (isFormValid) {
@@ -242,6 +304,7 @@ function CreateForm() {
 				if (isQ2Valid) {
 					setProgress(30);
 					setProgressText("Checking Question 3 validity...");
+
 					const isQ3Valid = q3Validity();
 
 					if (isQ3Valid) {
@@ -270,18 +333,17 @@ function CreateForm() {
 		return true;
 	};
 	const q1Validity = () => {
-		if (!q1Marks) {
+		if (!question1.question1Marks) {
 			alert("Marks is required for Question 1");
 			return false;
 		}
 
-		console.log(q1Categories.length, q1Options.length);
-		if (q1Categories.length < 2) {
+		if (question1.question1Categories.length < 2) {
 			alert("Minimum 2 Categories is required for Question 1");
 			return false;
 		}
 
-		if (q1Options.length < 1) {
+		if (question1.question1Options.length < 1) {
 			alert("Minimum 1 Option is required for Question 1");
 			return false;
 		}
@@ -290,12 +352,12 @@ function CreateForm() {
 	};
 
 	const q2Validity = () => {
-		if (!q2Marks) {
+		if (!question2.question2Marks) {
 			alert("Marks is required for Question 2");
 			return false;
 		}
 
-		if (!q2Sentence) {
+		if (!question2.question2Sentence) {
 			alert("Sentence is required for Question 2");
 			return false;
 		}
@@ -304,24 +366,22 @@ function CreateForm() {
 	};
 
 	const q3Validity = () => {
-		if (!q3Marks) {
+		if (!question3.question3Marks) {
 			alert("Marks is required for Question 3");
 			return false;
 		}
 
-		if (!paragraph) {
+		if (!question3.paragraph) {
 			alert("paragraph is required for Question 3");
 			return false;
 		}
 
-		console.log(mcq);
-
-		if (mcq.length < 1) {
+		if (question3.mcq.length < 1) {
 			alert("Minimum 1 mcq is required for Question 3");
 			return false;
 		}
 
-		const isMcqValid = mcqValidity(mcq);
+		const isMcqValid = mcqValidity(question3.mcq);
 
 		return isMcqValid;
 	};
@@ -361,11 +421,11 @@ function CreateForm() {
 
 	const postQ1 = () => {
 		let q1 = {
-			description: q1Desc,
-			categories: q1Categories,
-			options: q1Options,
-			q1Image,
-			markOnCorrectAnswer: q1Marks,
+			description: question1.q1Desc,
+			categories: question1.q1Categories,
+			options: question1.q1Options,
+			q1Image: question1.q1Image,
+			markOnCorrectAnswer: question1.q1Marks,
 		};
 
 		fetch(`${host}/question/question1/create`, {
@@ -396,12 +456,12 @@ function CreateForm() {
 	};
 	const postQ2 = (q1ID) => {
 		let q2 = {
-			description: q2Desc,
-			preview: q2Sentence,
-			q2Image,
-			correctAnswer: q2Sentence,
-			markOnCorrectAnswer: q2Marks,
-			options: selectedWords,
+			description: question2.question2Description,
+			preview: question2.question2Sentence,
+			q2Image: question2.question2Image,
+			correctAnswer: question2.question2Sentence,
+			markOnCorrectAnswer: question2.question2Marks,
+			options: question2.selectedWords,
 		};
 
 		fetch(`${host}/question/question2/create`, {
@@ -431,11 +491,11 @@ function CreateForm() {
 	};
 	const postQ3 = (q1ID, q2ID) => {
 		let q3 = {
-			description: q3Desc,
-			paragraph: paragraph,
-			q3Image,
-			mcq: mcq,
-			markOnCorrectAnswer: q3Marks,
+			description: question3.q3Desc,
+			paragraph: question3.paragraph,
+			q3Image: question3.q3Image,
+			mcq: question3.mcq,
+			markOnCorrectAnswer: question3.q3Marks,
 		};
 
 		fetch(`${host}/question/question3/create`, {
@@ -473,7 +533,6 @@ function CreateForm() {
 			q2,
 			q3,
 		};
-		console.log(formData);
 
 		fetch(`${host}/form/create`, {
 			method: "POST",
@@ -489,7 +548,6 @@ function CreateForm() {
 					alert(res.message);
 				} else {
 					console.log(res.form);
-					// alert("Form created successfully");
 					setProgress(100);
 					setProgressText("Form created successfully...");
 
@@ -706,8 +764,13 @@ function CreateForm() {
 								<div className="flex">
 									<input
 										type="text"
-										value={q1Desc}
-										onChange={(e) => setQ1Desc(e.target.value)}
+										value={question1.question1Description}
+										onChange={(e) =>
+											setQuestion1({
+												...question1,
+												question1Description: e.target.value,
+											})
+										}
 										placeholder="Enter description  "
 										className="mt-3.5 ml-3.5 mr-8 pl-2 text-xl w-1/2  border-0 bg-transparent outline-none custom-placeholder border-b-2 border-gray-400"
 									/>
@@ -728,8 +791,13 @@ function CreateForm() {
 									</div>
 									<input
 										type="number"
-										value={q1Marks}
-										onChange={(e) => setQ1Marks(e.target.value)}
+										value={question1.question1Marks}
+										onChange={(e) =>
+											setQuestion1({
+												...question1,
+												question1Marks: e.target.value,
+											})
+										}
 										placeholder="Marks *"
 										className="mt-3.5  mr-8 text-xl w-20  bg-transparent outline-none custom-placeholder pl-1 border-b-2 border-gray-400"
 									/>
@@ -737,17 +805,37 @@ function CreateForm() {
 								<div>
 									<InputList
 										Title="Category"
-										categories={q1Categories}
-										setCategories={setQ1Categories}
-										options={q1Options}
-										setQ1Options={setQ1Options}
+										categories={question1.question1Categories}
+										setCategories={(categories) =>
+											setQuestion1({
+												...question1,
+												question1Categories: categories,
+											})
+										}
+										options={question1.question1Options}
+										setQ1Options={(options) =>
+											setQuestion1({
+												...question1,
+												question1Options: options,
+											})
+										}
 									/>
 									<InputList
 										Title="Option"
-										categories={q1Categories}
-										setCategories={setQ1Categories}
-										options={q1Options}
-										setQ1Options={setQ1Options}
+										categories={question1.question1Categories}
+										setCategories={(categories) =>
+											setQuestion1({
+												...question1,
+												question1Categories: categories,
+											})
+										}
+										options={question1.question1Options}
+										setQ1Options={(options) =>
+											setQuestion1({
+												...question1,
+												question1Options: options,
+											})
+										}
 									/>
 								</div>
 								{/* <button
@@ -757,42 +845,47 @@ function CreateForm() {
 									Save
 								</button> */}
 
-								<button class="bookmarkBtn" onClick={displayPreview}>
-									<span class="IconContainer">
+								<button
+									className="bookmarkBtn"
+									onClick={displayPreview}
+								>
+									<span className="IconContainer">
 										<svg
 											viewBox="0 0 384 512"
 											height="0.9em"
-											class="icon"
+											className="icon"
 										>
 											<path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path>
 										</svg>
 									</span>
-									<p class="text">Save</p>
+									<p className="text">Save</p>
 								</button>
 							</div>
 						</div>
 						<div className=" w-1/2 ml-5">
 							<div className="flex justify-between items-center">
 								<h2 className="text-2xl">Question 1</h2>
-								<p>Marks {q1Marks}</p>
+								<p>Marks {question1.question1Marks}</p>
 							</div>
 							<div>
-								{q1ImageHave && (
+								{question1.question1ImageHave && (
 									<img
-										src={q1Image}
+										src={question1.question1Image}
 										alt=""
 										id="image-preview"
 										className="w-full"
 									/>
 								)}
-								{q1Desc && (
-									<p className="mt-3.5 mr-8 text-l">{q1Desc}</p>
+								{question1.question1Description && (
+									<p className="mt-3.5 mr-8 text-l">
+										{question1.question1Description}
+									</p>
 								)}
 							</div>
-							{q1Preview && (
-								<Q1Component
-									q1Categories={q1Categories}
-									q1Options={q1Options}
+							{question1.question1Preview && (
+								<Question1Component
+									q1Categories={question1.question1Categories}
+									q1Options={question1.question1Options}
 								/>
 							)}
 						</div>
@@ -808,8 +901,13 @@ function CreateForm() {
 								<div className="flex">
 									<input
 										type="text"
-										value={q2Desc}
-										onChange={(e) => setQ2Desc(e.target.value)}
+										value={question2.question2Description}
+										onChange={(e) =>
+											setQuestion2({
+												...question2,
+												question2Description: e.target.value,
+											})
+										}
 										placeholder="Enter description  "
 										className="mt-3.5 ml-3.5 mr-8 pl-2 text-xl w-1/2 border-0 bg-transparent outline-none custom-placeholder border-b-2 border-gray-400"
 									/>
@@ -829,8 +927,13 @@ function CreateForm() {
 									</div>
 									<input
 										type="number"
-										value={q2Marks}
-										onChange={(e) => setQ2Marks(e.target.value)}
+										value={question2.question2Marks}
+										onChange={(e) =>
+											setQuestion2({
+												...question2,
+												question2Marks: e.target.value,
+											})
+										}
 										placeholder="Marks *"
 										className="mt-3.5  mr-8 text-xl w-20 bg-transparent outline-none custom-placeholder pl-1 border-b-2 border-gray-400"
 									/>
@@ -838,15 +941,17 @@ function CreateForm() {
 								<div>
 									<div className="flex">
 										<p className="mt-3.5 ml-3.5 mr-8 text-xl w-3/4">
-											{q2Sentence.split(" ").map((word, index) => (
-												<span
-													key={index}
-													onDoubleClick={handleWordDoubleClick}
-													id={index}
-												>
-													{word}{" "}
-												</span>
-											))}
+											{question2.question2Sentence
+												.split(" ")
+												.map((word, index) => (
+													<span
+														key={index}
+														onDoubleClick={handleWordDoubleClick}
+														id={index}
+													>
+														{word}{" "}
+													</span>
+												))}
 										</p>
 										{/* {q2Sentence && (
 										<FontAwesomeIcon
@@ -857,14 +962,19 @@ function CreateForm() {
 									</div>
 									<input
 										type="text"
-										value={q2Sentence}
-										onChange={(e) => setQ2Sentence(e.target.value)}
+										value={question2.question2Sentence}
+										onChange={(e) =>
+											setQuestion2({
+												...question2,
+												question2Sentence: e.target.value,
+											})
+										}
 										placeholder="Enter the sentence. Double click on the word for selecting the word as blanks..."
 										className="mt-3.5 ml-3.5 mr-8 text-lg w-11/12 border-0 bg-transparent outline-none custom-placeholder border-b-2 border-gray-600"
 									/>
 									<WordList
 										Title="Words"
-										selectedWords={selectedWords}
+										selectedWords={question2.selectedWords}
 									/>
 								</div>
 								{/* <button
@@ -873,42 +983,47 @@ function CreateForm() {
 							>
 								Save
 							</button> */}
-								<button class="bookmarkBtn" onClick={displayQ2Preview}>
-									<span class="IconContainer">
+								<button
+									className="bookmarkBtn"
+									onClick={displayQ2Preview}
+								>
+									<span className="IconContainer">
 										<svg
 											viewBox="0 0 384 512"
 											height="0.9em"
-											class="icon"
+											className="icon"
 										>
 											<path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path>
 										</svg>
 									</span>
-									<p class="text">Save</p>
+									<p className="text">Save</p>
 								</button>
 							</div>
 						</div>
 						<div className=" w-1/2 ml-5">
 							<div className="flex justify-between items-center">
 								<h2 className="text-2xl">Question 2</h2>
-								<p>Marks {q2Marks}</p>
+								<p>Marks {question2.question2Marks}</p>
 							</div>
 							<div>
-								{q2ImageHave && (
+								{question2.question2ImageHave && (
 									<img
-										src={q2Image}
+										src={question2.question2Image}
 										alt=""
 										id="image-preview"
 										className="w-full"
 									/>
 								)}
-								{q2Desc && (
-									<p className="mt-3.5 mr-8 text-l">{q2Desc}</p>
+								{question2.question2Description && (
+									<p className="mt-3.5 mr-8 text-l">
+										{question2.question2Description}
+									</p>
 								)}
 							</div>
-							{q2Preview && (
-								<Q2Component
-									sentence={q2Sentence}
-									wordsArray={q2Options}
+							{question2.question2Preview && (
+								<Question2Component
+									sentence={question2.question2Sentence}
+									wordsArray={question2.question2Options}
 								/>
 							)}
 						</div>
@@ -924,8 +1039,13 @@ function CreateForm() {
 								<div className="flex">
 									<input
 										type="text"
-										value={q3Desc}
-										onChange={(e) => setQ3Desc(e.target.value)}
+										value={question3.q3Desc}
+										onChange={(e) =>
+											setQuestion3({
+												...question3,
+												q3Desc: e.target.value,
+											})
+										}
 										placeholder="Enter description  "
 										className="mt-3.5 ml-3.5 mr-8 text-xl w-2/4  border-0 bg-transparent outline-none custom-placeholder   border-b-2 border-gray-400"
 									/>
@@ -945,8 +1065,13 @@ function CreateForm() {
 									</div>
 									<input
 										type="number"
-										value={q3Marks}
-										onChange={(e) => setQ3Marks(e.target.value)}
+										value={question3.question3Marks}
+										onChange={(e) =>
+											setQuestion3({
+												...question3,
+												question3Marks: e.target.value,
+											})
+										}
 										placeholder="Marks *"
 										className="mt-3.5  mr-8 text-xl w-20 bg-transparent outline-none custom-placeholder pl-1  border-b-2 border-gray-400"
 									/>
@@ -958,10 +1083,15 @@ function CreateForm() {
 											id=""
 											cols="30"
 											rows="5"
-											value={paragraph}
-											onChange={(e) => setParagraph(e.target.value)}
+											value={question3.paragraph}
+											onChange={(e) =>
+												setQuestion3({
+													...question3,
+													paragraph: e.target.value,
+												})
+											}
 											placeholder="Enter paragraph *"
-											className="mt-3.5 ml-2 mr-8 text-l w-11/12 border bg-transparent outline-none custom-placeholder pl-1 resize-none tracking-widest border-2 border-gray-600"
+											className="mt-3.5 ml-2 mr-8 text-l w-11/12 border bg-transparent outline-none custom-placeholder pl-1 resize-none tracking-widest border-2 border-gray-600  drag-box-shadow p-4 mb-2 font-mono"
 										></textarea>
 										<div>
 											<div className=" w-11/12 flex justify-end">
@@ -984,19 +1114,19 @@ function CreateForm() {
 										</div>
 									</div>
 									<button
-										class="bookmarkBtn"
+										className="bookmarkBtn"
 										onClick={displayQ3Preview}
 									>
-										<span class="IconContainer">
+										<span className="IconContainer">
 											<svg
 												viewBox="0 0 384 512"
 												height="0.9em"
-												class="icon"
+												className="icon"
 											>
 												<path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path>
 											</svg>
 										</span>
-										<p class="text">Save</p>
+										<p className="text">Save</p>
 									</button>
 								</div>
 							</div>
@@ -1004,23 +1134,28 @@ function CreateForm() {
 						<div className=" w-1/2 ml-5">
 							<div className="flex justify-between items-center">
 								<h2 className="text-2xl">Question 3</h2>
-								<p>Marks {q3Marks}</p>
+								<p>Marks {question3.question3Marks}</p>
 							</div>
 							<div>
-								{q3ImageHave && (
+								{question3.question3ImageHave && (
 									<img
-										src={q3Image}
+										src={question3.question3Image}
 										alt=""
 										id="image-preview"
 										className="w-full"
 									/>
 								)}
-								{q3Desc && (
-									<p className="mt-3.5 mr-8 text-l">{q3Desc}</p>
+								{question3.question3Description && (
+									<p className="mt-3.5 mr-8 text-l">
+										{question3.question3Description}
+									</p>
 								)}
 							</div>
-							{q3Preview && (
-								<Q3Component paragraph={paragraph} mcqArray={mcq} />
+							{question3.question3Preview && (
+								<Question3Component
+									paragraph={question3.paragraph}
+									mcqArray={question3.mcq}
+								/>
 							)}
 						</div>
 					</section>
@@ -1032,10 +1167,13 @@ function CreateForm() {
 						>
 							Create Form
 						</button> */}
-						<button class="cssbuttons-io-button" onClick={checkValidity}>
+						<button
+							className="cssbuttons-io-button"
+							onClick={checkValidity}
+						>
 							{" "}
 							Create Form
-							<div class="icon">
+							<div className="icon">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									viewBox="0 0 24 24"
@@ -1073,9 +1211,9 @@ function CreateForm() {
 								>
 									Copy Link
 								</button> */}
-								<button class="copy-btn" onClick={handelCopyLink}>
-									<span class="text">Copy</span>
-									<span class="svgIcon">
+								<button className="copy-btn" onClick={handelCopyLink}>
+									<span className="text">Copy</span>
+									<span className="svgIcon">
 										<svg
 											fill="white"
 											viewBox="0 0 384 512"

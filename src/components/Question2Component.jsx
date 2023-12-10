@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-function Q2Component({ sentence, wordsArray }) {
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHand } from "@fortawesome/free-solid-svg-icons";
+
+function Question2Component({ sentence, wordsArray }) {
 	console.log(wordsArray);
 	const answer = new Array(sentence.split(" ").length).fill("###");
 
@@ -32,7 +35,7 @@ function Q2Component({ sentence, wordsArray }) {
 
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
-			<div className="sentence mt-3.5 ml-3.5 mr-8 text-xl">
+			<div className="sentence mt-3.5 ml-3.5 mr-8 text-xl drag-box-shadow p-4 ">
 				{answerSentence.map((word, index) =>
 					word === "###" ? (
 						<Droppable
@@ -47,7 +50,9 @@ function Q2Component({ sentence, wordsArray }) {
 										snapshot.isDraggingOver ? "dragging-over" : ""
 									}`}
 								>
-									<span>{"______ "}</span>
+									<span className="shadow-inner bg-gray-100 p-2 mr-2">
+										{"______"}
+									</span>
 									{provided.placeholder}
 								</span>
 							)}
@@ -77,7 +82,16 @@ function Q2Component({ sentence, wordsArray }) {
 												snapshot.isDragging ? "dragging" : ""
 											}`}
 										>
-											{word}
+											{/* {word} */}
+											<div className="flex w-max px-2 py-3 ml-2 mt-3 drag-box-shadow">
+												<FontAwesomeIcon
+													icon={faHand}
+													className="text-xl opacity-25 hover:opacity-100 transition-opacity mr-2"
+												/>
+												<p className="  text-l   bg-transparent outline-none custom-placeholder px-1  font-semibold leading-6 text-gray-900">
+													{word}
+												</p>
+											</div>
 										</div>
 									)}
 								</Draggable>
@@ -91,4 +105,4 @@ function Q2Component({ sentence, wordsArray }) {
 	);
 }
 
-export default Q2Component;
+export default Question2Component;

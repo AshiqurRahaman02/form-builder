@@ -3,19 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
-import Q1Component from "../components/Q1Component";
-import Q2Component from "../components/Q2Component";
-import Q3Component from "../components/Q3Component";
+import Question1Component from "../components/Question1Component";
+import Question2Component from "../components/Question2Component";
+import Question3Component from "../components/Question3Component";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faBars } from "@fortawesome/free-solid-svg-icons";
-
-const navigation = [
-	{ name: "Create New Form", to: "/form/create" },
-	// { name: "Features", to: "#" },
-	// { name: "Marketplace", to: "#" },
-	// { name: "Company", to: "#" },
-];
 
 function FormDetails() {
 	const host = "https://form-backend-rq3w.onrender.com";
@@ -25,7 +18,6 @@ function FormDetails() {
 	const navigate = useNavigate();
 
 	const [nav, setNav] = useState({ text: "Log in", to: "/signin" });
-	const [link, setLink] = useState({ to: "/form/create" });
 	const [navigation, setNavigation] = useState([
 		{ name: "Create New Form", to: "/form/create" },
 	]);
@@ -321,7 +313,7 @@ function FormDetails() {
 										<p className="mt-3.5 mr-8 text-l">{q1Desc}</p>
 									)}
 								</div>
-								<Q1Component
+								<Question1Component
 									q1Categories={q1Categories}
 									q1Options={q1Options}
 								/>
@@ -346,7 +338,7 @@ function FormDetails() {
 										<p className="mt-3.5 mr-8 text-l">{q2Desc}</p>
 									)}
 								</div>
-								<Q2Component
+								<Question2Component
 									sentence={q2Sentence}
 									wordsArray={q2Options}
 								/>
@@ -371,7 +363,10 @@ function FormDetails() {
 										<p className="mt-3.5 mr-8 text-l">{q3Desc}</p>
 									)}
 								</div>
-								<Q3Component paragraph={paragraph} mcqArray={mcq} />
+								<Question3Component
+									paragraph={paragraph}
+									mcqArray={mcq}
+								/>
 							</section>
 						)}
 						{displayQ3 && (
@@ -382,11 +377,14 @@ function FormDetails() {
 								>
 									Submit Form
 								</button> */}
-								<button class="submit-button" onClick={handleFormSubmit}>
-									<span class="txt">submit</span>
-									<span class="txt2">submitted</span>
-									<span class="loader-container">
-										<span class="loader"></span>
+								<button
+									className="submit-button"
+									onClick={handleFormSubmit}
+								>
+									<span className="txt">submit</span>
+									<span className="txt2">submitted</span>
+									<span className="loader-container">
+										<span className="loader"></span>
 									</span>
 								</button>
 							</section>

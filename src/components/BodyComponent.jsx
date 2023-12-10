@@ -9,7 +9,6 @@ import { faXmark, faBars } from "@fortawesome/free-solid-svg-icons";
 function Body() {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [nav , setNav] = useState({text:"Log in",to:"/signin"});
-	const [link , setLink] = useState({to:"/form/create"});
 	const [navigation,setNavigation] = useState([{ name: "Create New Form", to: "/form/create" }]);
 
 	useEffect(()=>{
