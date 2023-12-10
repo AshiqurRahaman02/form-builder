@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
-function Q1Component({ q1Categories, q1Options }) {
+function Question1Component({ q1Categories, q1Options }) {
 	let items = [];
 
 	q1Options.forEach((element) => {
@@ -233,4 +233,4 @@ function Q1Component({ q1Categories, q1Options }) {
 	);
 }
 
-export default Q1Component;
+export default Question1Component;

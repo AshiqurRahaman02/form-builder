@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage, faXmark, faBars, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-function McqInputComponent({ index, mcq, setMcq }) {
+function McqInputComponent({ index, question3, setQuestion3 }) {
+	console.log(index, question3);
 	const [question, setQuestion] = useState("");
 	const [checkboxInputs, setCheckboxInputs] = useState([
 		{ label: "", checked: false, input: "" },
@@ -52,13 +52,13 @@ function McqInputComponent({ index, mcq, setMcq }) {
 			}
 		});
 
-		mcq[index] = {
+		question3.mcq[index] = {
 			question,
 			options,
 			correctOption,
 		};
 
-		setMcq([...mcq]);
+		setQuestion3({ ...question3, mcq: [...question3.mcq] });
 	}, [question, checkboxInputs]);
 
 	return (
@@ -93,7 +93,7 @@ function McqInputComponent({ index, mcq, setMcq }) {
 				onClick={addCheckboxInput}
 				className="mt-2  bg-cyan-300 p-1 ml-2 mt-2 custom-add-button"
 			>
-				Add Option <FontAwesomeIcon icon={faPlus} className="ml-1"/>
+				Add Option <FontAwesomeIcon icon={faPlus} className="ml-1" />
 			</button>
 		</div>
 	);

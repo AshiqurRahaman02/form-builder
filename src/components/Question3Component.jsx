@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function ParagraphMCQComponent({ paragraph, mcqArray }) {
+function Question3Component({ paragraph, mcqArray }) {
 	const [selectedOptions, setSelectedOptions] = useState([]);
 
 	const handleOptionChange = (question, selectedOption) => {
@@ -11,14 +11,14 @@ function ParagraphMCQComponent({ paragraph, mcqArray }) {
 
 	return (
 		<div className="mt-3.5 ml-5">
-			<p className=" text-xl">{paragraph}</p>
+			<p className=" text-xl  drag-box-shadow p-4 mb-5 font-mono">{paragraph}</p>
 			{mcqArray.map((mcq, index) => (
-				<div key={index} className="">
-					<p className="mt-3.5 ml-0 mr-8 text-lg">
+				<div key={index} className=" drag-box-shadow p-3 mb-2">
+					<p className="mt-3.5 ml-0 mr-8 text-lg font-bold">
 						{"Question 3."}
 						{index + 1}{" "}
 					</p>
-					<p className="mt-0 ml-8 mr-8 text-lg">{mcq.question}</p>
+					<p className="mt-0 ml-8 mr-8 text-lg font-sans">{mcq.question}</p>
 
 					{mcq.options.map((option, optionIndex) => (
 						<div key={optionIndex} className="ml-8 mt-2">
@@ -27,7 +27,7 @@ function ParagraphMCQComponent({ paragraph, mcqArray }) {
 								checked={selectedOptions[index] === option}
 								onChange={() => handleOptionChange(index, option)}
 							/>
-							<span className="ml-2 text-base">{option}</span>
+							<span className="ml-2 text-base font-serif">{option}</span>
 						</div>
 					))}
 				</div>
@@ -36,4 +36,4 @@ function ParagraphMCQComponent({ paragraph, mcqArray }) {
 	);
 }
 
-export default ParagraphMCQComponent;
+export default Question3Component;
